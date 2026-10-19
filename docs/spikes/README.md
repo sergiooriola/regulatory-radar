@@ -96,9 +96,9 @@ measurements from S3 to S5.
 - **Method:** Use the token counts measured in S3 to S5 and the bulletin volume measured in S1,
   priced with the AWS Price List API for eu-south-2; add the infrastructure from the AWS
   Pricing Calculator.
-- **Threshold:** projected monthly cost at or below the ceiling agreed with the client in
-  discovery. The proposal suggests 15 USD a month, against an estimate of 2 to 8 USD made from
-  list prices and the BOE volume of 13 to 17 October 2026.
+- **Threshold:** projected monthly cost at or below the ceiling agreed with the client: 15 USD a
+  month, agreed on 2026-10-19, against an estimate of 2 to 8 USD made from list prices and the
+  BOE volume of 13 to 17 October 2026.
 - **Time box:** 1 day.
 
 ## Reports
