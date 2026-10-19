@@ -1,0 +1,24 @@
+# Risk register
+
+- **Last reviewed:** 2026-10-19
+- **Scale:** likelihood and impact are each *low*, *medium* or *high*.
+
+Each risk is reviewed at every phase exit. A closed risk keeps its row, with the evidence that
+closed it.
+
+| ID | Risk | Likelihood | Impact | Response | Linked to | Status |
+| --- | --- | --- | --- | --- | --- | --- |
+| R01 | The radar says a rule does not apply when it does, and the client misses an obligation. | Medium | High | Recall-first thresholds in S3–S5; every classification shows its reasoning and article; a person decides; evals against the client's reviewed map. | S3, S4, S5 | Open |
+| R02 | AWS promotional credits do not cover Claude on Bedrock. The AWS Price List API for eu-south-2 describes Claude Haiku 5.5 and Sonnet 5.5 usage as "AWS Marketplace software usage" (checked 2026-10-19), and credits are reported to exclude Marketplace. | High | Low | Check on the first bill in S6; the cost estimate assumes no credits for the model. | S6, S7 | Open |
+| R03 | A new AWS account is not granted access to Anthropic models (community reports say Free-plan accounts are denied). | Medium | High | Open the account on the Paid plan; S6 confirms access before any other spike depends on it. | S6 | Open |
+| R04 | BOCM cannot be read reliably by a program, or its terms do not allow reuse. No API or RSS feed was found. | High | Medium | S2 decides; if it fails, BOCM is left out of the first version and every notice says so. | S2 | Open |
+| R05 | Instructions the regional education authority sends directly to schools never appear in a bulletin. | High | Medium | Out of scope; stated in the proposal and in every notice. | Proposal | Accepted |
+| R06 | The model cites an article that does not exist or says something it does not say. | Medium | High | Every cited article is checked against the BOE consolidated text before it is shown; S4 and S5 require zero invented citations. | S4, S5 | Open |
+| R07 | Running cost exceeds the ceiling agreed with the client. | Low | Medium | S7 measures it before design; AWS Budgets alerts at 50 %, 80 % and 100 % of the ceiling (alerts do not stop spending, so the owner acts on them). | S7 | Open |
+| R08 | The client's CEO has little time to review. | High | Medium | The sponsor's load is limited to the proposal, one map review of about 20 to 30 rows prepared so that it only needs confirming or correcting, and acceptance. | Plan | Open |
+| R09 | Learning goals (Kubernetes, MCP, extra tooling) add cost or complexity to the client's product. | Medium | Medium | Learning work runs in a separate sandbox account; each tool in the product needs an ADR that justifies it for the product. | Plan | Open |
+| R10 | A notice is read as legal advice. | Medium | High | Every notice states that it is an aid and that a person decides; labour questions go to the school's labour adviser. | Proposal | Open |
+| R11 | Consolidated texts on BOE are informative only, and reuse requires attribution. | High | Low | Notices link to the official publication; the attribution text and update dates are shown as the BOE reuse terms require. | Design | Open |
+| R12 | The ground truth for evals is weak until the client reviews the map. | High | Medium | Spikes use a reference list built from independent sources before any model runs; the client's reviewed map replaces it at the gate. | S3, S5 | Open |
+| R13 | One person builds and runs everything. | High | Medium | Operations runbook, documented decisions and infrastructure as code, so another engineer could take over. | Design | Open |
+| R14 | Bulletin text contains instructions that the model follows (prompt injection). | Low | Medium | Bulletin text is passed as data, never as instructions; the classification output is validated against a schema. | Design | Open |
