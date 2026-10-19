@@ -47,6 +47,37 @@ development and CI, and an EKS cluster created with Terraform, demonstrated and 
 hours in a separate sandbox account. A job that runs once a day does not justify a cluster that
 runs all day; production uses pay-per-use services.
 
+## Technology map
+
+What each planned technology is for, where it runs and who pays for it. "Planned" means it is a
+candidate: each one is confirmed or rejected by an ADR in the design phase, and a technology
+that cannot justify itself in the product moves to learning scope. The client's proposal
+names none of them, because the client buys outcomes, not tools; the plain-language solution
+summary in phase 3 describes the pieces without the jargon.
+
+| Technology | What it does in the radar | Runs in | Cost to the client | Decided in |
+| --- | --- | --- | --- | --- |
+| Python | Language for everything except the review page | — | None (free software) | Phase 3 |
+| Claude Haiku 5.5 and Sonnet 5.5 on Amazon Bedrock | Classify and analyse publications; draft the notice | Client's AWS account, EU processing | The model line of the estimate | S4, then an ADR |
+| LangChain (`langchain-aws`) | Standard interface to the model, document loading and splitting, vector-store integration | Inside the daily job | None (free software) | ADR |
+| LangGraph | The daily flow as explicit steps, with a pause for human approval | Inside the daily job | None (free software); its saved state needs a database | ADR |
+| Embeddings and a vector store | Retrieval: find the rules in the map related to each new publication | Client's AWS account | A few cents a month, inside the AWS line | ADR |
+| Database (PostgreSQL on Aurora Serverless v2 with auto-pause, or DynamoDB) | The profile, the map, the history of classifications, LangGraph state | Client's AWS account | 0 to about 3.4 USD a month, inside the AWS line; see R15 | ADR |
+| Amazon SQS | Queue of publications waiting for analysis | Client's AWS account | Free up to 1 million requests a month, against roughly 20,000 (send, receive and delete for each of about 6,000 publications) | ADR, which must show a queue is needed at this volume |
+| Scheduled compute (Lambda or a container task) | Runs the job each publication day | Client's AWS account | Inside monthly free allowances | ADR |
+| Amazon SES | Sends the weekly notice | Client's AWS account | Cents | ADR |
+| TypeScript and React | The page where the client reviews the map | Client's AWS account | Inside the AWS line | ADR |
+| Terraform | Creates and changes all infrastructure from code | Owner's computer and CI | None to use; its state file costs cents | ADR |
+| Docker | Packages the job the same way locally and in AWS | Owner's computer, CI, AWS | None (free software) | ADR |
+| LangSmith | Traces of each run: steps, tokens, cost and latency | LangChain's cloud; EU region on the free plan to be confirmed | None on the free plan: 5,000 traces a month, one seat. One trace per daily run is about 26 a month | ADR, together with the data protection note |
+| MCP server | Lets the owner ask Claude about the map from a desktop client | Owner's computer | None to the client | ADR |
+| Kubernetes (kind or k3d locally, EKS for a demonstration) | Learning scope: not part of the product | Owner's computer; a separate sandbox AWS account paid by the owner | None to the client | ADR explaining why production does not use it |
+| GitHub and GitHub Actions | Code hosting, reviews, continuous integration | GitHub | None to the client | — |
+
+The AWS line of the proposal's estimate (0 to 4 USD a month) is a first approximation. The
+design phase replaces it with an itemised estimate, one row per service, from the AWS Pricing
+Calculator and the measurements of S7.
+
 ## Phases
 
 Durations are indicative. The work is part-time with variable hours, so each phase's dates are
