@@ -5,7 +5,9 @@ Each one states its pass threshold **before** it runs, so the result cannot bend
 code is throwaway and lives under `spikes/<id>/`; labelled data and anything about the client
 stay in the private repository.
 
-- **Status of this plan:** proposed, awaiting the owner's approval of the thresholds.
+- **Status of this plan:** approved on 2026-10-19. The owner delegated the approval of the
+  thresholds to the engineer writing this plan; any later change to a threshold is recorded
+  here with its date and reason, before the spike it affects runs.
 - **Last updated:** 2026-10-19
 
 ## Order
@@ -56,8 +58,11 @@ measurements from S3 to S5.
 
 - **Question:** For a flagged item, does the model give a correct classification with the
   article that makes it apply, the obligation and the deadline?
-- **Method:** Run the analysis on the flagged items from S3 with their full text. Check every
-  cited article against the text.
+- **Method:** Run the analysis on the flagged items from S3 with their full text, first with
+  Claude Haiku 5.5 and then with Claude Sonnet 5.5, which costs twenty times as much per token.
+  Check every cited article against the text. The cheapest model, or combination (the small
+  model analyses, the large one only reviews what the small one marks as doubtful), that passes
+  the threshold is the one the design uses.
 - **Threshold:** zero invented citations; no item labelled *affects* classified as *does not
   affect*; agreement with the owner's label on at least 90 % of items.
 - **Time box:** 3 days.
@@ -92,7 +97,8 @@ measurements from S3 to S5.
   priced with the AWS Price List API for eu-south-2; add the infrastructure from the AWS
   Pricing Calculator.
 - **Threshold:** projected monthly cost at or below the ceiling agreed with the client in
-  discovery. The proposal suggests 60 USD a month.
+  discovery. The proposal suggests 15 USD a month, against an estimate of 2 to 8 USD made from
+  list prices and the BOE volume of 13 to 17 October 2026.
 - **Time box:** 1 day.
 
 ## Reports
