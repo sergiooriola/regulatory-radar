@@ -25,6 +25,10 @@ applicability map, a daily watch of the official bulletins and a weekly notice.
 - **Cost is designed, not discovered.** The design is reviewed against the cost pillar of the
   AWS Well-Architected Generative AI Lens (model right-sizing, fewer tokens, prompt caching,
   stop conditions for agents) before the gate.
+- **Pay only while it runs.** The radar works for a few minutes per publication day, so no
+  component may bill by the hour while idle unless an ADR justifies it. The usual traps are an
+  always-on database instance, a NAT gateway, public IPv4 addresses and vector stores with a
+  minimum monthly charge.
 - **Nothing about the client lives in this repository.** The client's profile, its map, the
   labelled samples and every client document are kept in a separate private repository
   ([ADR 0002](adr/0002-keep-client-data-in-a-private-repository.md)).
@@ -34,7 +38,9 @@ applicability map, a daily watch of the official bulletins and a weekly notice.
 The owner builds the radar partly to demonstrate a specific set of tools: Python, Claude on
 Amazon Bedrock in an EU region, LangChain and LangGraph, retrieval over the bulletin stream,
 PostgreSQL, Terraform, an MCP server and a TypeScript review page. Each of these still gets an
-ADR that weighs the alternatives and says when it would not be the right choice.
+ADR that weighs the alternatives and says when it would not be the right choice. Where a
+learning goal conflicts with the client's cost ceiling, the ceiling wins and the goal is met
+outside the client's account.
 
 Kubernetes is learning scope, not part of the client's product: a local cluster for
 development and CI, and an EKS cluster created with Terraform, demonstrated and destroyed within
@@ -92,3 +98,4 @@ signing acceptance. Everything else is available to read but never required.
 | Date | Event |
 | --- | --- |
 | 2026-10-19 | Project started. Proposal drafted; spike thresholds proposed. |
+| 2026-10-19 | Owner found the first estimate (25–55 USD a month) too high. Re-estimated at 2–8 USD with pay-per-use services and the small model doing most of the work; ceiling 15 USD. Spike thresholds approved. |
