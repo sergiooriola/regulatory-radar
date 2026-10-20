@@ -109,3 +109,4 @@ threshold as fixed here, what was done, the result, and the decision that follow
 | Spike | Report | Result |
 | --- | --- | --- |
 | S1 | [s1-boe-open-data.md](s1-boe-open-data.md) | Passed on 2026-10-20 |
+| S2 | [s2-bocm-access-and-reuse.md](s2-bocm-access-and-reuse.md) | Passed on 2026-10-20 on the engineer's checks; the owner's spot check of one summary PDF is pending |
