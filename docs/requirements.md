@@ -95,8 +95,9 @@ notice refers to them (FR-27).
     independent reviewer at the gate.
   - **Pilot:** an observation during the four weeks of real notices in phase 5.
 - **Sources** of each requirement are the proposal (by section), the plan, the README, an ADR or
-  a risk. Facts about external services are cited with their URL and the date read under
-  [sources](#sources).
+  a risk. "Quality baseline" marks a quality the owner requires of the agreed scope where the
+  proposal does not state it, such as multi-factor authentication; it adds no capability. Facts
+  about external services are cited with their URL and the date read under [sources](#sources).
 
 ## Profile data model
 
@@ -186,6 +187,99 @@ not decide applicability.
 | FR-28 | Every notice must state that instructions sent directly to schools by the regional education authority, without being published in a bulletin, are not covered. | Test: the statement is present in every notice. | Proposal, out of scope; [R05] |
 | FR-29 | While the BOCM is not watched, every notice must say so. | Test: with the BOCM disabled, the statement is present in every notice. | Proposal, risks; [R04] |
 
+## Non-functional requirements
+
+### Accuracy and recall
+
+Saying "does not affect" about a rule that affects the school is the error that matters; a false
+alarm costs a few minutes. The thresholds are those fixed in [spikes](spikes/README.md) before
+any spike runs, restated here so that they keep holding after the spikes: the evals repeat
+them before each release (NFR-34).
+
+| ID | Requirement | Acceptance criterion | Source and links |
+| --- | --- | --- | --- |
+| NFR-1 | The classification of items must flag 100 % of the items labelled *affects* and at least 95 % of those labelled *may affect*, while passing no more than 10 % of all items on to deep analysis. | Spike: [S3] threshold. Eval: the same thresholds on the [S3] labelled set. | Proposal, the problem and the proposal; [R01] |
+| NFR-2 | The deep analysis must classify no item labelled *affects* as *does not affect*, and must agree with the owner's label on at least 90 % of items. | Spike: [S4] threshold. Eval: the same thresholds on the [S4] labelled set. | [R01] |
+| NFR-3 | The map and the notices must contain zero invented citations. | Spike: [S4] and [S5] thresholds. Test: FR-18 and FR-19. | [R06] |
+| NFR-4 | The map produced from a profile must contain at least 90 % of the rules in the reference list. | Spike: [S5] threshold. Eval: from the gate on, the client's reviewed map replaces the reference list. | Proposal, risks; [R01], [R12] |
+| NFR-5 | The radar must miss no change to, or repeal of, a rule in the map. | Spike: [S1] threshold for relations. Pilot: at its end, the owner checks the consolidated text of every rule in the map for changes published during the pilot, and finds each one in a notice. | Proposal, the problem and the proposal |
+
+### Completeness and recovery
+
+| ID | Requirement | Acceptance criterion | Source and links |
+| --- | --- | --- | --- |
+| NFR-6 | Every item of every publication day must be classified before the notice that covers that day is sent. | Test: a daily reconciliation of items retrieved, classified and in the day's summary. Pilot: every publication day reconciles. | Proposal, scope; [R01] |
+| NFR-7 | The radar must not cap the number of items it classifies in a day. | Test: the radar classifies every item of the largest publication day observed in [S1]. | Proposal, scope |
+| NFR-8 | After a run that fails or does not start, a later run must process the publication days it missed. | Test: with one scheduled run suppressed, the next run processes both days. | [R01] |
+
+### Cost
+
+| ID | Requirement | Acceptance criterion | Source and links |
+| --- | --- | --- | --- |
+| NFR-9 | The running cost billed to the client's account for the radar must not exceed 15 USD in any calendar month. | Spike: [S7] projects a monthly cost at or below the ceiling. Pilot: each month's bill is at or below it. | Proposal, running cost; plan, status log; [R07] |
+| NFR-10 | The owner must receive an alert when the month's cost reaches 50 %, 80 % and 100 % of the ceiling. | Review: the alert configuration. Test: a test alert reaches the owner. | Proposal, running cost; [R07] |
+| NFR-11 | No component may bill by the hour while the radar is idle, unless an ADR justifies it. | Review: the itemised cost estimate in the design phase has no hourly idle charge without an ADR. | Plan, principles; [R15] |
+| NFR-12 | Before the monthly cost exceeds the ceiling, the owner must send the client a written proposal. | Review: the operations runbook contains the procedure. | Proposal, running cost; [R07] |
+
+### EU data residency
+
+| ID | Requirement | Acceptance criterion | Source and links |
+| --- | --- | --- | --- |
+| NFR-13 | All data the radar stores, including logs and traces, must be stored in the European Union. | Review: the region of every service in the design, the observability service included; a service that cannot guarantee it is not used. | Proposal, data and confidentiality |
+| NFR-14 | All processing, including the AI model's inference, must take place in the European Union. | Spike: [S6] threshold (both models invoked through the EU inference profile). Review: as for NFR-13. | Proposal, data and confidentiality; [R03] |
+
+### Security
+
+| ID | Requirement | Acceptance criterion | Source and links |
+| --- | --- | --- | --- |
+| NFR-15 | The review page must be reachable only by authenticated users whom the owner has authorised. | Test: requests without authentication, or from an unauthorised user, are refused. | Proposal, scope and data and confidentiality |
+| NFR-16 | Every human access to the client's cloud account must require multi-factor authentication. | Review: the account's users and their settings. | Quality baseline; C-1 |
+| NFR-17 | Credentials and keys must not be stored in the repository or in the code. | Test: a secret scan of the repository history finds none. | Quality baseline; [ADR 0002] |
+| NFR-18 | Each component's permissions must grant only the actions and resources it uses; no permission may use a wildcard unless an ADR justifies it. | Review: the permission policies in the infrastructure code. | Quality baseline |
+| NFR-19 | Bulletin text must be passed to the model as data, never as instructions. | Test: an item whose text contains instructions to the model is classified as if they were not there. | [R14] |
+| NFR-20 | Every model output must be validated against a schema; an output that fails must not be used and must be recorded. | Test: a malformed output is rejected and appears in the run record. | [R14] |
+| NFR-21 | Data must be encrypted in transit. | Review: every connection in the infrastructure code uses TLS. | Quality baseline; proposal, data and confidentiality |
+| NFR-22 | Data must be encrypted at rest. | Review: every store in the infrastructure code has encryption enabled. | Quality baseline; proposal, data and confidentiality |
+
+### Data protection
+
+| ID | Requirement | Acceptance criterion | Source and links |
+| --- | --- | --- | --- |
+| NFR-23 | The radar must not process personal data of pupils, families or staff. Its inputs are official publications, the school's profile and the email addresses of the notice's recipients. | Review: the data protection note in the design phase lists every data item and its source. | Proposal, data and confidentiality |
+| NFR-24 | The client's profile, map and documents must be kept only in private storage, and never in the public repository. | Test: the client-identifier check passes on every change. Review: the storage of each item in the design. | Proposal, data and confidentiality; [ADR 0002] |
+
+### Reuse and attribution
+
+The BOE's reuse conditions bind anyone who reuses its documents ([BOE reuse], second
+condition). The notice and the review page adapt and summarise them, which the conditions call
+a derived work or value-added service.
+
+| ID | Requirement | Acceptance criterion | Source and links |
+| --- | --- | --- | --- |
+| NFR-25 | Every notice, and the review page, must cite the source as "Basado en datos de la Agencia Estatal Boletín Oficial del Estado", with a link to <https://www.boe.es>. | Test: the citation and the link are present in every notice and on the page. | [BOE reuse], fourth condition; [R11] |
+| NFR-26 | Wherever a consolidated text is reused, the radar must state that it is a consolidated text for information only ("texto consolidado de carácter meramente informativo"). | Test: the statement accompanies every reused consolidated text. | [BOE reuse], fourth condition; [R11] |
+| NFR-27 | Wherever a BOE document is reused, the radar must state the date of its last update when the original document gives one. | Test: the date is shown for a document that has one. | [BOE reuse], fourth condition; [R11] |
+| NFR-28 | The radar must not suggest that what it shows is official, or that the BOE agency takes part in, sponsors or supports it. | Review: the wording of the notice and of the page. | [BOE reuse], fourth condition |
+| NFR-29 | Every summary, extract or other adaptation of a BOE document must be identified as such, distinct from the original text. | Review: the notice and the page against the conditions. | [BOE reuse], fourth condition |
+| NFR-30 | If the BOCM is watched, the radar must reuse it only on the terms [S2] finds, with the attribution those terms require. | Spike: [S2] threshold (the terms allow automated reuse). Review: the notice against those terms. | [R04] |
+
+### Maintainability
+
+| ID | Requirement | Acceptance criterion | Source and links |
+| --- | --- | --- | --- |
+| NFR-31 | All cloud infrastructure must be created from code in the repository, apart from documented bootstrap steps. | Review: a drift check finds no difference between the code and the account. | [R13] |
+| NFR-32 | An operations runbook must let another engineer run, recover and change the radar. | Review: the independent reviewer follows the runbook for one recovery. | Plan, deliverables; [R13] |
+| NFR-33 | Each significant design decision must be recorded as an ADR in MADR format, with the options discarded. | Review: at the gate, each technology in the design has an ADR. | Plan, principles; [ADR 0001] |
+| NFR-34 | A change to the model, the prompts or the classification logic must pass the evals of NFR-1 to NFR-4 before it is released. | Review: the release record of each such change shows the eval results. | [R01], [R06] |
+
+### Observability
+
+| ID | Requirement | Acceptance criterion | Source and links |
+| --- | --- | --- | --- |
+| NFR-35 | Each run must record the publication days it processed, the items retrieved from each bulletin, the items in each class, the tokens and the estimated cost for each model, its duration and its errors. | Test: a run's record has every field. | [R07], [R13] |
+| NFR-36 | The owner must receive an alert when a scheduled run fails or does not start, or when a notice is not sent. | Test: each of the three faults, injected, produces an alert. | [R01], [R13] |
+| NFR-37 | Each classification must be kept with its reasoning and citations, so that any item, in a notice or not, can be explained afterwards. | Test: the record of a classified item returns its class, reasoning and citations. | [R01]; README, design goals |
+
 ## Open questions
 
 Points the proposal leaves open, for the design phase. Each names who decides. None of them is
@@ -204,17 +298,24 @@ stated.
 
 <!-- Link references -->
 
+[ADR 0001]: adr/0001-record-architecture-decisions-with-madr.md
 [ADR 0002]: adr/0002-keep-client-data-in-a-private-repository.md
 [BOE reuse]: https://www.boe.es/informacion/aviso_legal/index.php#reutilizacion
 [IEEE 29148]: https://standards.ieee.org/ieee/29148/6937/
 [NASA SEH App. C]: https://www.nasa.gov/reference/appendix-c-how-to-write-a-good-requirement/
 [R01]: risk-register.md
+[R03]: risk-register.md
 [R04]: risk-register.md
 [R05]: risk-register.md
 [R06]: risk-register.md
+[R07]: risk-register.md
 [R08]: risk-register.md
 [R10]: risk-register.md
+[R11]: risk-register.md
 [R12]: risk-register.md
+[R13]: risk-register.md
+[R14]: risk-register.md
+[R15]: risk-register.md
 [S1]: spikes/README.md#s1-boe-open-data
 [S2]: spikes/README.md#s2-bocm-access-and-reuse
 [S3]: spikes/README.md#s3-triage-recall
