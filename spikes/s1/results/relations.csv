@@ -1,0 +1,11 @@
+n,affected_id,amending_id,expected,metadatos_status,analisis_status,estado_consolidacion,fecha_actualizacion,found,relations_found,texts_found
+1,BOE-A-1998-19580,BOE-A-2026-19200,repeals,200,200,Finalizado,20261004T221001Z,True,210 SE DEROGA,", por Real Decreto 723/2026, de 9 de septiembre"
+2,BOE-A-2015-11430,BOE-A-2026-20528,amends,200,200,Finalizado,20261019T064012Z,True,270 SE MODIFICA,"el art. 37.6, por Ley 4/2026, de 1 de octubre"
+3,BOE-A-2006-20764,BOE-A-2026-18828,amends,200,200,Finalizado,20261007T095616Z,True,270 SE MODIFICA,", con efectos desde el 1 de enero de 2026, la disposición adicional 57, por Real Decreto-ley 23/2026, de 8 de septiembre"
+4,BOE-A-1997-24617,BOE-A-2026-18998,amends,200,200,Finalizado,20260911T095623Z,True,270 SE MODIFICA,"el art. único y la disposición final 1 del Real Decreto y los arts. 1 a 9, 12 a 18, 21 y 22 de su Reglamento, por Real Decreto 2026/722, de 9 de septiembre"
+5,BOE-A-2013-12632,BOE-A-2026-20528,amends,200,200,Finalizado,20261006T102138Z,True,270 SE MODIFICA,"y SE AÑADE determinados preceptos, por Ley 4/2026, de 1 de octubre"
+6,BOE-A-2006-22080,BOE-A-2026-18509,repeals,200,200,Finalizado,20260903T091716Z,True,210 SE DEROGA,", con efectos desde el 2 de enero de 2027, por Real Decreto 707/2026, de 2 de septiembre"
+7,BOE-A-2007-6239,BOE-A-2026-18509,amends,200,200,Finalizado,20260903T082507Z,True,270 SE MODIFICA,", con efectos desde el 2 de enero de 2027, el art. 13, por Real Decreto 707/2026, de 2 de septiembre"
+8,BOE-A-2021-14318,BOE-A-2026-20911,amends,200,200,Finalizado,20261008T083402Z,True,270 SE MODIFICA,"los arts. 3 y 4, por Real Decreto 808/2026, de 7 de octubre"
+9,BOE-A-2011-14252,BOE-A-2026-18261,amends,200,200,Finalizado,20260828T103540Z,True,270 SE MODIFICA,"el anexo II, por Orden PJC/903/2026, de 26 de agosto"
+10,BOE-A-2006-21990,BOE-A-2026-20528,amends,200,200,Finalizado,20261006T100021Z,True,270 SE MODIFICA,"determinados preceptos, las referencias indicadas, y SE AÑADE Y SE SUPRIME los preceptos señalados, por Ley 4/2026, de 1 de octubre"
