@@ -17,7 +17,7 @@ do its terms allow automated reuse?
 automated reuse. Otherwise BOCM is left out of the first version and every notice says so (risk
 R04).
 
-## Hand-check days, chosen before the run
+## Hand-check days, chosen before any comparison
 
 The 20 days are the 20 most recent bulletins up to 2026-10-20. Three are checked by hand, chosen
 to cover a weekday, a Saturday and the largest bulletin of the window:
@@ -27,6 +27,17 @@ to cover a weekday, a Saturday and the largest bulletin of the window:
 | 2026-10-20 | 250 | Today's bulletin, a weekday |
 | 2026-10-17 | 248 | A Saturday, a smaller bulletin |
 | 2026-10-09 | 241 | The largest bulletin of the window by number of items |
+
+**When they were chosen.** The days were committed at 10:01:44 (Madrid time) in
+[8f655f6](https://github.com/sergiooriola/regulatory-radar/commit/8f655f6). That was after
+requests to bocm.es had begun (09:54:34) and before the retrieval script started (10:02:14).
+No item had been compared by then: every comparison ran later, inside the script as each day
+was fetched, or from the cache during and after the run. The
+item counts used to pick the largest bulletin are the number of CVEs listed for each bulletin
+in [`/sumarios.rss`](https://www.bocm.es/sumarios.rss), fetched at 09:57:15. Before the commit,
+the exploration had also fetched bulletin 250's HTML summary and the XML of three of its items,
+to learn the formats. The commit message says "before the run"; it means before the retrieval
+script, not before the first request.
 
 ## Result
 
