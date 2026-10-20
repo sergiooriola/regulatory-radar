@@ -160,7 +160,8 @@ not decide applicability.
 
 ### Daily watch
 
-The spikes found these sources; the design chooses which one it reads for each step.
+The spikes found these sources; the design chooses which one it reads for each step, within the
+requirements on [access to the sources](#access-to-the-sources).
 
 - **BOE** ([S1 report]): the open-data daily summary
   (`/datosabiertos/api/boe/sumario/{yyyymmdd}`) lists every item of every issue of the day,
@@ -270,6 +271,19 @@ them before each release (NFR-34).
 | NFR-23 | The radar must not process personal data of pupils, families or staff. Its inputs are official publications, the school's profile and the email addresses of the notice's recipients. | Review: the data protection note in the design phase lists every data item and its source. | Proposal, data and confidentiality |
 | NFR-24 | The client's profile, map and documents must be kept only in private storage, and never in the public repository. | Test: the client-identifier check passes on every change. Review: the storage of each item in the design. | Proposal, data and confidentiality; [ADR 0002] |
 
+### Access to the sources
+
+Both bulletins are public services that may restrict or deny automated access: the BOE's reuse
+conditions say access may be denied to anyone breaking them, and the BOCM honours requests to
+de-index items by disallowing them one by one in its robots.txt, about 1,800 on 2026-10-20
+([S1 report], [S2 report]; risks [R19], [R21]).
+
+| ID | Requirement | Acceptance criterion | Source and links |
+| --- | --- | --- | --- |
+| NFR-40 | In each run, before its first request to a host, the radar must read that host's robots.txt, and it must not request any URL that robots.txt disallows to the radar, honouring the `*` and `$` patterns in its rules. What happens to stored copies of items that a robots.txt later disallows is decided under OQ-15. | Test: with a robots.txt that disallows one item through a `*` or `$` pattern, a run reads robots.txt before any other request to that host and makes no request to that item. Review: the request log of a pilot day has no request to a disallowed path, such as the BOE's `/diario_boe/xml.php` or the BOCM's `/boletin/CM_Boletin_BOCM/`. | [S1 report], [S2 report]; [R19], [R21] |
+| NFR-41 | Between two requests to the same host, the radar must wait at least the `Crawl-delay` that host's robots.txt sets, and at least 1 second where it sets none. The BOCM's was 10 seconds on 2026-10-20. | Test: with a robots.txt that sets a crawl delay, the request log shows no two requests to that host closer together than the delay. Pilot: the same on every run's request log. | [S2 report]; [R19], [R21]; quality baseline |
+| NFR-42 | Every request to a bulletin's site must carry a User-Agent that names the radar and gives a URL at which its operator can be reached. | Test: every request in a run's request log carries it. | [R19] |
+
 ### Reuse and attribution
 
 The BOE's reuse conditions bind anyone who reuses its documents ([BOE reuse], second
@@ -331,7 +345,7 @@ change of scope and follows C-6.
 | OQ-12 | Who may change the notice's recipients, and how? | FR-22 | Owner, with the client |
 | OQ-13 | Is the 15 USD ceiling before or after any taxes on the bill, and which costs count against it, for example evals run after the gate? | NFR-9 | Owner, confirmed with the client |
 | OQ-14 | Which account pays for evals and other development runs after the gate, given that development has no cost to the client (C-2)? | NFR-9, NFR-34 | Owner |
-| OQ-15 | Bulletin items may contain personal data; the BOE's conditions require its reuse to respect the GDPR and the Spanish data protection act ([BOE reuse], fourth condition). S2 found the same in BOCM items, where many titles name people. How is personal data inside bulletin items handled, and the login data of the review page? | NFR-15, NFR-23 | Owner, in the data protection note |
+| OQ-15 | Bulletin items may contain personal data; the BOE's conditions require its reuse to respect the GDPR and the Spanish data protection act ([BOE reuse], fourth condition). S2 found the same in BOCM items, where many titles name people. How is personal data inside bulletin items handled, and the login data of the review page? What happens to stored copies of items that a bulletin's robots.txt later disallows, as the BOCM does for de-indexed items ([R21])? | NFR-15, NFR-23, NFR-40 | Owner, in the data protection note |
 | OQ-16 | Can the observability service in the plan's technology map keep its data in the EU on its free plan? The plan lists this as to be confirmed. | NFR-13 | Owner, in an ADR |
 | OQ-17 | Which acceptance tests, drawn from these requirements, does the client sign at the end of the pilot? | All | Owner, in the test plan |
 
@@ -372,7 +386,9 @@ document.
 [R14]: risk-register.md
 [R15]: risk-register.md
 [R17]: risk-register.md
+[R19]: risk-register.md
 [R20]: risk-register.md
+[R21]: risk-register.md
 [R22]: risk-register.md
 [S1]: spikes/README.md#s1-boe-open-data
 [S1 report]: spikes/s1-boe-open-data.md
