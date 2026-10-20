@@ -1,6 +1,6 @@
 # Risk register
 
-- **Last reviewed:** 2026-10-19
+- **Last reviewed:** 2026-10-20
 - **Scale:** likelihood and impact are each *low*, *medium* or *high*.
 
 Each risk is reviewed at every phase exit. A closed risk keeps its row, with the evidence that
@@ -10,7 +10,7 @@ closed it.
 | --- | --- | --- | --- | --- | --- | --- |
 | R01 | The radar says a rule does not apply when it does, and the client misses an obligation. | Medium | High | Recall-first thresholds in S3–S5; every classification shows its reasoning and article; a person decides; evals against the client's reviewed map. | S3, S4, S5 | Open |
 | R02 | AWS promotional credits do not cover Claude on Bedrock. The AWS Price List API for eu-south-2 describes Claude Haiku 5.5 and Sonnet 5.5 usage as "AWS Marketplace software usage" (checked 2026-10-19), and credits are reported to exclude Marketplace. | High | Low | Check on the first bill in S6; the cost estimate assumes no credits for the model. | S6, S7 | Open |
-| R03 | A new AWS account is not granted access to Anthropic models (community reports say Free-plan accounts are denied). | Medium | High | Open the account on the Paid plan; S6 confirms access before any other spike depends on it. | S6 | Open |
+| R03 | A new AWS account is not granted access to Anthropic models (community reports say Free-plan accounts are denied). | Medium | High | Open the account with the advanced sign-up (the newer one cannot use opt-in Regions or AWS Marketplace) on the Paid plan, following the [setup runbook](runbooks/aws-account-setup.md); S6 confirms access before any other spike depends on it. | S6 | Open |
 | R04 | BOCM cannot be read reliably by a program, or its terms do not allow reuse. No API or RSS feed was found. | High | Medium | S2 decides; if it fails, BOCM is left out of the first version and every notice says so. | S2 | Open |
 | R05 | Instructions the regional education authority sends directly to schools never appear in a bulletin. | High | Medium | Out of scope; stated in the proposal and in every notice. | Proposal | Accepted |
 | R06 | The model cites an article that does not exist or says something it does not say. | Medium | High | Every cited article is checked against the BOE consolidated text before it is shown; S4 and S5 require zero invented citations. | S4, S5 | Open |
@@ -23,3 +23,4 @@ closed it.
 | R13 | One person builds and runs everything. | High | Medium | Operations runbook, documented decisions and infrastructure as code, so another engineer could take over. | Design | Open |
 | R14 | Bulletin text contains instructions that the model follows (prompt injection). | Low | Medium | Bulletin text is passed as data, never as instructions; the classification output is validated against a schema. | Design | Open |
 | R15 | A database inside a VPC forces the daily job into the VPC, and reaching the internet from there needs a NAT gateway: 0.045 USD an hour in AWS's own pricing example (US East, Ohio), about 33 USD a month, twice the whole ceiling. | Medium | High | The design must show a network path with no hourly charge; the options are weighed in an ADR (a database reached over HTTPS, such as DynamoDB or Aurora's Data API, among others). | Design | Open |
+| R16 | The client's profile changes (staff crosses a legal threshold such as 25 or 50, a service opens or closes) and the map no longer matches it. The radar cannot detect this on its own. | Medium | Medium | Every notice states the date of the profile it uses. Proposed, for the owner to decide in design: a yes/no re-confirmation of the profile at the start of each school year, prepared so it takes the sponsor a few minutes. | Design | Open |
