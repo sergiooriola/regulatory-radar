@@ -1,8 +1,7 @@
 # Project plan
 
 - **Owner:** Sergio Oriola Díaz
-- **Phase:** 2, feasibility. Phase 1 closes when the owner sends the client the discovery
-  report, version 1.0
+- **Phase:** 2, feasibility
 - **Last updated:** 2026-10-20
 
 ## Problem
@@ -136,3 +135,4 @@ signing acceptance. Everything else is available to read but never required.
 | 2026-10-20 | S1 passed: 60 of 60 days, 11,718 of 11,718 items complete, 10 of 10 relations. Measured volume about 195 items per publication day (about 5,100 a month, below the 6,000 the estimate assumed). Risks R17 to R19 added. |
 | 2026-10-20 | S2 passed on the engineer's checks: 20 of 20 BOCM days (1,439 items), 3 of 3 hand checks, reuse allowed with conditions; the owner's spot check of one summary PDF is pending. BOCM's 10 s crawl delay makes a full day take 12 to 21 minutes, which the design must fit. Risks R20 to R22 added. |
 | 2026-10-20 | Phase 1 exit: requirements updated with the S1 and S2 findings (FR-30 to FR-34, NFR-38 to NFR-43); every risk reviewed; discovery report 1.0, with the success criteria, ready in the private repository. With both bulletins the volume is about 7,000 items a month, above the 6,000 the estimate assumed from the BOE alone; S7 counts both. Phase 1 closes when the owner sends the report. |
+| 2026-10-20 | Discovery report 1.0 sent to the client. Phase 1 closed. Phase 2 continues with S6, which waits for the client's AWS account. |
