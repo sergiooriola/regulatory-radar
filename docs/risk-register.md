@@ -1,6 +1,7 @@
 # Risk register
 
-- **Last reviewed:** 2026-10-20, at the end of phase 1 (every risk read again; R04 and R17 to R22 linked to the requirements that answer them)
+- **Last reviewed:** 2026-10-20, at the end of phase 1 (every risk read again; R04 and R17
+  to R22 linked to the requirements that answer them)
 - **Scale:** likelihood and impact are each *low*, *medium* or *high*.
 
 Each risk is reviewed at every phase exit. A closed risk keeps its row, with the evidence that
