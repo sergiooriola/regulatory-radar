@@ -302,7 +302,7 @@ change of scope and follows C-6.
 | OQ-12 | Who may change the notice's recipients, and how? | FR-22 | Owner, with the client |
 | OQ-13 | Is the 15 USD ceiling before or after any taxes on the bill, and which costs count against it, for example evals run after the gate? | NFR-9 | Owner, confirmed with the client |
 | OQ-14 | Which account pays for evals and other development runs after the gate, given that development has no cost to the client (C-2)? | NFR-9, NFR-34 | Owner |
-| OQ-15 | Bulletin items may contain personal data; the BOE's conditions require its reuse to respect the GDPR and the Spanish data protection act ([BOE reuse], fourth condition). How is personal data inside bulletin items handled, and the login data of the review page? | NFR-15, NFR-23 | Owner, in the data protection note |
+| OQ-15 | Bulletin items may contain personal data; the BOE's conditions require its reuse to respect the GDPR and the Spanish data protection act ([BOE reuse], fourth condition). S2 found the same in BOCM items, where many titles name people. How is personal data inside bulletin items handled, and the login data of the review page? | NFR-15, NFR-23 | Owner, in the data protection note |
 | OQ-16 | Can the observability service in the plan's technology map keep its data in the EU on its free plan? The plan lists this as to be confirmed. | NFR-13 | Owner, in an ADR |
 | OQ-17 | Which acceptance tests, drawn from these requirements, does the client sign at the end of the pilot? | All | Owner, in the test plan |
 
