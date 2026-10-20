@@ -21,8 +21,9 @@ The radar has four parts, which the requirements below follow:
    provision that makes it apply, what it requires and from when.
 2. **Map review page.** A private web page on which the client sponsor reviews the map row by
    row.
-3. **Daily watch.** Every publication day, every item in the official bulletin is classified
-   against the profile, and changes to the rules in the map are detected.
+3. **Daily watch.** Every publication day, every item in the official bulletins watched (the
+   BOE and, under FR-16, the BOCM) is classified against the profile, and changes to the rules
+   in the map are detected.
 4. **Weekly notice.** An email with what is new, what changes, what to do and by when.
 
 ### Out of scope
@@ -40,8 +41,10 @@ From the proposal:
   law of the foreign country whose education system the client follows, and the requirements of
   the client's accreditation body.
 - **Carrying out the obligations detected.** The radar notifies; the client acts.
-- **The regional bulletin (BOCM)**, unless spike [S2] shows it can be read and reused (risk
-  [R04]).
+- **The regional bulletin (BOCM), if** the owner's spot check of one summary PDF, the last open
+  part of spike [S2], finds a difference from the program's extraction. S2 otherwise passed on
+  2026-10-20, so the BOCM is in the first version (FR-16); if the spot check fails, it is left
+  out and every notice says so (FR-29, risk [R04]).
 
 From the project plan:
 
@@ -156,13 +159,25 @@ not decide applicability.
 
 ### Daily watch
 
+The spikes found these sources; the design chooses which one it reads for each step.
+
+- **BOE** ([S1 report]): the open-data daily summary
+  (`/datosabiertos/api/boe/sumario/{yyyymmdd}`) lists every item of every issue of the day,
+  extraordinary issues included, with links to the signed PDF, the only official and authentic
+  format, and to the HTML. The consolidated-legislation API gives each consolidated rule's later
+  amendments and repeals.
+- **BOCM** ([S2 report]): there is no API, bulk download or open-data dataset. `/sumarios.rss`
+  lists the last 20 bulletins with every item's identifier (CVE); a bulletin's HTML summary gives
+  every item's number, section, department, sub-body, title and PDF link in one request; the XML
+  of each item adds its rank, dates, pages and full text.
+
 | ID | Requirement | Acceptance criterion | Source and links |
 | --- | --- | --- | --- |
 | FR-12 | On each BOE publication day, the radar must retrieve every item that day's BOE publishes, in all its sections. | Spike: [S1] threshold. Test: each day, the number of items retrieved equals the number in the day's summary. | Proposal, scope |
 | FR-13 | The radar must classify every retrieved item as *affects*, *may affect* or *does not affect* the profile. | Spike: [S3] and [S4] thresholds. Eval: NFR-1 and NFR-2. | Proposal, the problem and the proposal |
 | FR-14 | Each item classified as *affects* or *may affect* must carry the reasoning and the provision on which its classification rests. | Test: every such item validates against the classification schema. Spike: [S4] threshold. | Proposal, the problem and the proposal; [R01] |
 | FR-15 | The radar must detect every change to, and every repeal of, a rule in the map that the BOE publishes. | Spike: [S1] threshold for relations. Pilot: NFR-5. | Proposal, the problem and the proposal; README |
-| FR-16 | If spike [S2] passes, the radar must apply FR-12 to FR-15 to the BOCM as well. | Review: the [S2] report and the decision it records. Test: as for FR-12, against the BOCM summary. | Proposal, scope; [R04] |
+| FR-16 | The radar must apply FR-12 to FR-15 to the BOCM as well, unless the owner's spot check of one summary PDF, which completes spike [S2], finds a difference; then FR-29 applies instead. | Spike: [S2] threshold, met on the engineer's checks on 2026-10-20 (20 of 20 days, 1,439 items, 3 of 3 hand checks, reuse allowed with conditions); the owner's spot check is pending. Test: as for FR-12, the items retrieved each day equal those in the day's BOCM HTML summary. | Proposal, scope; [S2 report]; [R04] |
 | FR-17 | If an item or a publication day cannot be retrieved or classified, the radar must report it in the next weekly notice instead of skipping it. | Test: with a simulated failure of the source, the next notice lists the unprocessed day or item. | Proposal, the problem and the proposal; [R01] |
 
 ### Citation check
@@ -185,7 +200,7 @@ not decide applicability.
 | FR-26 | Every notice must state that it is an aid, not legal advice, and that a person decides. | Test: the statement is present in every notice. | Proposal, the problem and the proposal; [R10] |
 | FR-27 | For an item about the collective agreement or another labour matter, the notice must report its publication and refer its interpretation to the client's labour adviser, without interpreting it. | Review: the [S4] output and the pilot notices for every such item. | Proposal, out of scope; [R10] |
 | FR-28 | Every notice must state that instructions sent directly to schools by the regional education authority, without being published in a bulletin, are not covered. | Test: the statement is present in every notice. | Proposal, out of scope; [R05] |
-| FR-29 | While the BOCM is not watched, every notice must say so. | Test: with the BOCM disabled, the statement is present in every notice. | Proposal, risks; [R04] |
+| FR-29 | While the BOCM is not watched, every notice must say so. This is R04's fallback: it applies from the start if the owner's spot check that completes [S2] finds a difference, and at any later time the BOCM is not watched. | Test: with the BOCM disabled, the statement is present in every notice. | Proposal, risks; [S2 report]; [R04] |
 
 ## Non-functional requirements
 
@@ -254,6 +269,13 @@ The BOE's reuse conditions bind anyone who reuses its documents ([BOE reuse], se
 condition). The notice and the review page adapt and summarise them, which the conditions call
 a derived work or value-added service.
 
+The BOCM publishes no licence or reuse conditions of its own. [S2] read the general law (the
+copyright act, Ley 37/2007 on the reuse of public-sector information and the Comunidad de
+Madrid's Ley 10/2019) as allowing the radar's automated reuse, on conditions: follow robots.txt,
+cite the BOCM and link to the official text, do not alter the content, and treat personal data
+under data protection law ([S2 report], reuse terms). That reading is the engineer's, not a
+lawyer's; asking the BOCM to confirm it in writing is for the owner to decide ([R04]).
+
 | ID | Requirement | Acceptance criterion | Source and links |
 | --- | --- | --- | --- |
 | NFR-25 | Every notice, and the review page, must cite the source as "Basado en datos de la Agencia Estatal Boletín Oficial del Estado", with a link to <https://www.boe.es>. | Test: the citation and the link are present in every notice and on the page. | [BOE reuse], fourth condition; [R11] |
@@ -261,7 +283,7 @@ a derived work or value-added service.
 | NFR-27 | Wherever a BOE document is reused, the radar must state the date of its last update when the original document gives one. | Test: the date is shown for a document that has one. | [BOE reuse], fourth condition; [R11] |
 | NFR-28 | The radar must not suggest that what it shows is official, or that the BOE agency takes part in, sponsors or supports it. | Review: the wording of the notice and of the page. | [BOE reuse], fourth condition |
 | NFR-29 | Every summary, extract or other adaptation of a BOE document must be identified as such, distinct from the original text. | Review: the notice and the page against the conditions. | [BOE reuse], fourth condition |
-| NFR-30 | If the BOCM is watched, the radar must reuse it only on the terms [S2] finds, with the attribution those terms require. | Spike: [S2] threshold (the terms allow automated reuse). Review: the notice against those terms. | [R04] |
+| NFR-30 | Wherever the radar reuses a BOCM item, it must cite the BOCM as the source with the bulletin's number and date, link to the item's official PDF, and identify any summary or other adaptation as such, distinct from the original text. | Spike: [S2] threshold (the terms allow automated reuse). Test: every BOCM item in a notice and on the review page has the citation, the number, the date and the link. Review: the notice and the page against the conditions in the [S2 report]. | [S2 report], reuse terms; [R04] |
 
 ### Maintainability
 
@@ -311,6 +333,11 @@ change of scope and follows C-6.
 External sources, each read on 2026-10-20. Where an official source could not be read, that is
 stated.
 
+Facts about the BOE and the BOCM taken from the spike reports (sources, formats, robots.txt,
+crawl delay, reuse terms) are cited through the [S1 report] and the [S2 report], which give the
+URL of each source and the date it was read, 2026-10-20. They were not read again for this
+document.
+
 | Source | Used for | Notes |
 | --- | --- | --- |
 | [BOE, legal notice, reuse conditions][BOE reuse] | NFR on reuse and attribution | Conditions approved by resolution of the BOE agency of 27 June 2024, as the page states |
@@ -338,7 +365,9 @@ stated.
 [R14]: risk-register.md
 [R15]: risk-register.md
 [S1]: spikes/README.md#s1-boe-open-data
+[S1 report]: spikes/s1-boe-open-data.md
 [S2]: spikes/README.md#s2-bocm-access-and-reuse
+[S2 report]: spikes/s2-bocm-access-and-reuse.md
 [S3]: spikes/README.md#s3-triage-recall
 [S4]: spikes/README.md#s4-deep-analysis
 [S5]: spikes/README.md#s5-map-discovery
