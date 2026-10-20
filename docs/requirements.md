@@ -231,6 +231,8 @@ them before each release (NFR-34).
 | NFR-6 | Every item of every publication day must be classified before the notice that covers that day is sent. | Test: a daily reconciliation of items retrieved, classified and in the day's summary. Pilot: every publication day reconciles. | Proposal, scope; [R01] |
 | NFR-7 | The radar must not cap the number of items it classifies in a day. | Test: the radar classifies every item of the largest publication day observed in [S1]. | Proposal, scope |
 | NFR-8 | After a run that fails or does not start, a later run must process the publication days it missed. | Test: with one scheduled run suppressed, the next run processes both days. | [R01] |
+| NFR-38 | While the BOCM is watched, the radar must retrieve every BOCM bulletin published while it was not running, even when it stopped for longer than the 20 bulletins the BOCM feed lists, a little over three weeks. | Test: after a simulated outage of more than 20 BOCM bulletins, the following runs retrieve every bulletin of the outage and FR-31 finds no gap. [S2] did not test a way to catch up. | [S2 report]; [R22]; NFR-8 |
+| NFR-39 | The retrieval of each publication day from every watched bulletin must complete within the run or runs the design provides, with no item left out and no request sooner than the source's crawl delay allows. At the BOCM's 10-second crawl delay, the summary plus every item's XML takes about 12 minutes for an average day of [S2] (72 items) and 21 minutes for its largest (121); the design chooses how to fit it, for example by triaging from the summary and fetching only the candidates' XML, or by spreading the fetch over several runs. | Review: the design shows how the largest BOCM day observed fits within the time limit of the compute it runs on (900 seconds for a standard AWS Lambda function, [S2 report]). Test: a simulated BOCM day of 121 items, served with a 10-second crawl delay, is retrieved in full. | [S2 report]; [R04], [R22]; NFR-7 |
 
 ### Cost
 
@@ -316,7 +318,7 @@ change of scope and follows C-6.
 | ID | Question | Affects | Decides |
 | --- | --- | --- | --- |
 | OQ-1 | On which day and at what time is the weekly notice sent, and which publication days does each notice cover? | FR-22, FR-23 | Owner, confirmed with the client |
-| OQ-2 | By what time must a publication day's run finish? The proposal sets none. | NFR-6, NFR-36 | Owner |
+| OQ-2 | By what time must a publication day's run finish? The proposal sets none. | NFR-6, NFR-36, NFR-39 | Owner |
 | OQ-3 | In which language are the notice and the review page written? The proposal does not say. | FR-8, FR-24 | Owner, confirmed with the client |
 | OQ-4 | Does the owner approve each notice before it is sent? The plan's technology map mentions a pause for human approval; the proposal says only that the notice goes to the client and the owner. | FR-22 | Owner |
 | OQ-5 | How does a new rule, change or repeal that a person confirms enter the map, and does a changed map go back to the client sponsor, whose review the proposal limits to once (C-5)? | FR-3, FR-7, FR-15 | Owner; the client if it asks for more of its time |
@@ -369,6 +371,9 @@ document.
 [R13]: risk-register.md
 [R14]: risk-register.md
 [R15]: risk-register.md
+[R17]: risk-register.md
+[R20]: risk-register.md
+[R22]: risk-register.md
 [S1]: spikes/README.md#s1-boe-open-data
 [S1 report]: spikes/s1-boe-open-data.md
 [S2]: spikes/README.md#s2-bocm-access-and-reuse
