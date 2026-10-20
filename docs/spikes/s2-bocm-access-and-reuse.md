@@ -123,9 +123,13 @@ selections, judges of the peace); only counts and check results are committed, i
 
 ## Retrieval
 
-One run on 2026-10-20 from 09:58 to 14:14 (Madrid time) made 1,460 requests to bocm.es: the
-feed, 20 HTML summaries and 1,439 item XML files, one every 10 seconds as robots.txt asks. All
-answered 200 at the first attempt. Each check was then re-run from the local cache, with no new
+Requests to bocm.es began at 09:54:34 (Madrid time) on 2026-10-20, with robots.txt and the
+pages read for the terms and the formats. The retrieval script ran from 10:02:14 to 14:13:54.
+It used 1,460 responses: the feed, 20 HTML summaries and 1,439 item XML files. Five of them
+(the feed, bulletin 250's summary and three of its items) had been fetched during the
+exploration between 09:57 and 10:01 and came from the cache; the script fetched the other
+1,455, one every 10 seconds as robots.txt asks. Every response from bocm.es, 1,479 in all,
+was 200 at the first attempt. Each check was then re-run from the local cache, with no new
 requests.
 
 | Date | Day | Bulletin | Items | Same items in feed, summary and XML | Numbered 1 to N | Missing fields, first run / fixed | Differences, first run / fixed |
