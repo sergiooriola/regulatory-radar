@@ -88,7 +88,8 @@ notice refers to them (FR-27).
   revision authorised ([IEEE 29148]). Its text is not freely available and was not read, so this
   document does not claim to conform to it.
 - **Identifiers** are never reused. A requirement that is dropped keeps its row, marked as
-  withdrawn, with the reason.
+  withdrawn, with the reason. A requirement added later takes the next free number and goes in
+  the section it belongs to, so numbers within a section are not always in order.
 - **Verification methods:**
   - **Spike:** the threshold of a feasibility spike, fixed in [spikes](spikes/README.md) before
     it runs.
@@ -179,6 +180,8 @@ The spikes found these sources; the design chooses which one it reads for each s
 | FR-15 | The radar must detect every change to, and every repeal of, a rule in the map that the BOE publishes. | Spike: [S1] threshold for relations. Pilot: NFR-5. | Proposal, the problem and the proposal; README |
 | FR-16 | The radar must apply FR-12 to FR-15 to the BOCM as well, unless the owner's spot check of one summary PDF, which completes spike [S2], finds a difference; then FR-29 applies instead. | Spike: [S2] threshold, met on the engineer's checks on 2026-10-20 (20 of 20 days, 1,439 items, 3 of 3 hand checks, reuse allowed with conditions); the owner's spot check is pending. Test: as for FR-12, the items retrieved each day equal those in the day's BOCM HTML summary. | Proposal, scope; [S2 report]; [R04] |
 | FR-17 | If an item or a publication day cannot be retrieved or classified, the radar must report it in the next weekly notice instead of skipping it. | Test: with a simulated failure of the source, the next notice lists the unprocessed day or item. | Proposal, the problem and the proposal; [R01] |
+| FR-30 | Each run must read again the BOE summary of the previous publication day and retrieve every issue and item added to it since the radar last read it. An extraordinary issue shares the day's summary and nothing marks it as extraordinary. | Test: when the second read of a day's summary holds an issue the first did not, that issue's items are retrieved, classified and listed in the next notice under FR-23. | [S1 report]: four extraordinary issues in 60 days, one with the Congress's repeal of two royal decree-laws; [R17] |
+| FR-31 | The radar must check that the issue numbers it has retrieved for each watched bulletin are consecutive within the year, and must treat a missing number as a missed issue, to be retrieved or else reported under FR-17. | Test: with one issue left out of the retrieved data, the gap is found and the issue is retrieved or listed in the next notice. | [S1 report] (BOE issue numbers are consecutive within a year); [S2 report] (the BOCM bulletin number is sequential within the year); [R17], [R22] |
 
 ### Citation check
 
