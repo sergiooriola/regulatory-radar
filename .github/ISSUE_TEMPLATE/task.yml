@@ -1,0 +1,22 @@
+name: Task
+description: A piece of work with a clear result
+body:
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Outcome
+      description: What exists or works when this is done.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: How it will be checked
+      description: The test, review or measurement that closes the issue.
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: Links to the plan, ADRs, risks or other issues.
