@@ -181,8 +181,8 @@ results are in the history ([first](https://github.com/sergiooriola/regulatory-r
 For each of the three days, [`handcheck.py`](../../spikes/s2/handcheck.py) wrote the summary
 page's visible text and the program's extraction in the same layout. A line-by-line diff
 showed no difference on any of the three days. The engineer (an AI agent) then read the
-reader's view item by item: every number from 1 to N present once, under the right section, department and sub-body, with
-the right title.
+reader's view item by item: every number from 1 to N present once, under the right section,
+department and sub-body, with the right title.
 
 | Date | Bulletin | Items | Lines in each view | Differences | Sections covered |
 | --- | --- | --- | --- | --- | --- |
@@ -264,8 +264,9 @@ Writing to them is outward-facing, so it is left to the owner (see the pull requ
 **BOCM is in the first version, subject to the owner's spot check.** On the engineer's
 checks, R04's fallback (leave BOCM out and say so in every notice) does not apply. If the
 owner's comparison of one summary PDF in a browser finds a difference, the hand-check part of
-the threshold is not met and the fallback applies. R04's description is out of date: the BOCM does publish RSS feeds and per-item
-XML (see the pull request for the suggested change to the risk register).
+the threshold is not met and the fallback applies. R04's description is out of date: the BOCM
+does publish RSS feeds and per-item XML (see the pull request for the suggested change to the
+risk register).
 
 The reading of the reuse terms is the engineer's, from the law cited above, not a lawyer's.
 Whether to ask the BOCM for written confirmation is left to the owner.
