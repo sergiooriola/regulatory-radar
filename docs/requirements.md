@@ -283,7 +283,28 @@ a derived work or value-added service.
 ## Open questions
 
 Points the proposal leaves open, for the design phase. Each names who decides. None of them is
-answered here.
+answered here. Where an answer would add to the client's workload or to the cost, it is a
+change of scope and follows C-6.
+
+| ID | Question | Affects | Decides |
+| --- | --- | --- | --- |
+| OQ-1 | On which day and at what time is the weekly notice sent, and which publication days does each notice cover? | FR-22, FR-23 | Owner, confirmed with the client |
+| OQ-2 | By what time must a publication day's run finish? The proposal sets none. | NFR-6, NFR-36 | Owner |
+| OQ-3 | In which language are the notice and the review page written? The proposal does not say. | FR-8, FR-24 | Owner, confirmed with the client |
+| OQ-4 | Does the owner approve each notice before it is sent? The plan's technology map mentions a pause for human approval; the proposal says only that the notice goes to the client and the owner. | FR-22 | Owner |
+| OQ-5 | How does a new rule, change or repeal that a person confirms enter the map, and does a changed map go back to the client sponsor, whose review the proposal limits to once (C-5)? | FR-3, FR-7, FR-15 | Owner; the client if it asks for more of its time |
+| OQ-6 | How is the profile kept current, for example a staff count near a legal threshold, and does a change to the profile produce a new map? | FR-1, FR-3 | Owner, with the client |
+| OQ-7 | Should the map list rules that do not apply only because of a threshold in the profile, so that a change to the threshold is watched? FR-15 watches only rules in the map. | FR-3, FR-15 | Owner |
+| OQ-8 | Should the notice remind the client of approaching dates in rules already in the map, such as a provision that applies from a later date? | FR-23, FR-24 | Owner; the client if it is a change of scope |
+| OQ-9 | Should the notice order or mark its items by priority? | FR-24 | Owner |
+| OQ-10 | How is an item or row whose citation failed the check shown: to the owner only, or in the notice with a warning? | FR-21 | Owner |
+| OQ-11 | How long are classifications and run records kept? | NFR-35, NFR-37 | Owner, in the data protection note |
+| OQ-12 | Who may change the notice's recipients, and how? | FR-22 | Owner, with the client |
+| OQ-13 | Is the 15 USD ceiling before or after any taxes on the bill, and which costs count against it, for example evals run after the gate? | NFR-9 | Owner, confirmed with the client |
+| OQ-14 | Which account pays for evals and other development runs after the gate, given that development has no cost to the client (C-2)? | NFR-9, NFR-34 | Owner |
+| OQ-15 | Bulletin items may contain personal data; the BOE's conditions require its reuse to respect the GDPR and the Spanish data protection act ([BOE reuse], fourth condition). How is personal data inside bulletin items handled, and the login data of the review page? | NFR-15, NFR-23 | Owner, in the data protection note |
+| OQ-16 | Can the observability service in the plan's technology map keep its data in the EU on its free plan? The plan lists this as to be confirmed. | NFR-13 | Owner, in an ADR |
+| OQ-17 | Which acceptance tests, drawn from these requirements, does the client sign at the end of the pilot? | All | Owner, in the test plan |
 
 ## Sources
 
