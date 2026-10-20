@@ -1,6 +1,6 @@
 """Spike S2: retrieve the 20 most recent BOCM publication days. Throwaway code.
 
-Usage: python3.14 -I retrieve.py
+Usage: python3.14 retrieve.py   (from this folder)
 
 Sources, all official and all allowed by https://www.bocm.es/robots.txt:
 

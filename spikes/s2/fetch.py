@@ -1,6 +1,6 @@
 """Polite cached HTTP GET for spike S2. Throwaway; not imported by the product.
 
-Usage: python3.14 -I fetch.py URL [URL ...]   prints the cache path of each response.
+Usage: python3.14 fetch.py URL [URL ...]   prints the cache path of each response.
 
 - At most one request per second per host (across runs, via a timestamp file), or the
   host's robots.txt Crawl-delay if longer (www.bocm.es asks for 10 seconds).
