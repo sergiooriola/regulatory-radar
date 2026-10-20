@@ -63,8 +63,8 @@ applicants to list "los enlaces y documentos que quiere desindexar". Python's
 `urllib.robotparser` does not implement the `*` and `$` wildcards these rules use, so the spike
 matches rules itself following RFC 9309.
 
-**No open data.** The BOCM's
-["Bases de datos públicas" page](https://www.bocm.es/enlaces-y-servicios/bases-de-datos-publicas) says "Actualmente no
+**No open data.** The BOCM's "Bases de datos públicas"
+[page](https://www.bocm.es/enlaces-y-servicios/bases-de-datos-publicas) says "Actualmente no
 hay contenido clasificado con este término". The national catalogue datos.gob.es, which
 federates the regional ones, has no dataset whose title contains "Oficial de la Comunidad de
 Madrid" ([API query](https://datos.gob.es/apidata/catalog/dataset/title/Oficial%20de%20la%20Comunidad%20de%20Madrid.json));
