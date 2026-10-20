@@ -148,6 +148,7 @@ not decide applicability.
 | FR-5 | Each map row must give the reasoning behind it, naming the profile attributes it depends on, and a link to the rule's official publication. | Test: every row validates against the map schema. Review: the map at the gate. | Proposal, the problem and the proposal; README, design goals |
 | FR-6 | Where it is uncertain whether a rule applies to the school, its row must say so and give the reasoning and the provisions it rests on, leaving the decision to the client sponsor. | Review: every uncertain row in the [S5] output and in the map for review has its reasoning and at least one verified provision. | Proposal, the problem and the proposal |
 | FR-7 | The radar must not show the map to the client sponsor until the owner has approved it. | Test: before the owner's approval, the review page shows no map to the client sponsor's account. | Proposal, scope |
+| FR-34 | For every rule in the map, the radar must have a stated way to detect its amendments and repeals. For a rule outside the BOE consolidated collection, whose changes the consolidated-legislation API cannot give, its map row must state that way, for example from the new rule's own text in the daily watch. | Review: at the gate, every map row for a rule outside the collection states how its changes are detected. Test: for one rule outside the collection, a simulated amendment is detected the way its row states. | [S1 report] (the collection covers mainly rules with the rank of law plus selected others; a rule outside it answers 404); [R18]; FR-15 |
 
 ### Map review page
 
@@ -387,6 +388,7 @@ document.
 [R14]: risk-register.md
 [R15]: risk-register.md
 [R17]: risk-register.md
+[R18]: risk-register.md
 [R19]: risk-register.md
 [R20]: risk-register.md
 [R21]: risk-register.md
