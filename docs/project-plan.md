@@ -1,8 +1,8 @@
 # Project plan
 
 - **Owner:** Sergio Oriola Díaz
-- **Phase:** 0, proposal
-- **Last updated:** 2026-10-19
+- **Phase:** 1, discovery
+- **Last updated:** 2026-10-20
 
 ## Problem
 
@@ -131,3 +131,4 @@ signing acceptance. Everything else is available to read but never required.
 | 2026-10-19 | Project started. Proposal drafted; spike thresholds proposed. |
 | 2026-10-19 | Owner found the first estimate (25–55 USD a month) too high. Re-estimated at 2–8 USD with pay-per-use services and the small model doing most of the work; ceiling 15 USD. Spike thresholds approved. |
 | 2026-10-19 | Client answered the profile questions and agreed the 15 USD ceiling, ahead of discovery. Proposal issued as 1.0; written acceptance pending. |
+| 2026-10-20 | Client confirmed its profile and accepted proposal 1.0. Phase 0 closed; discovery and S6 start. Repositories published. |
