@@ -26,10 +26,9 @@ git history shows they were fixed in advance.
 - **Selection:** rules relevant to education, labour, inclusion and food first, as the spike
   brief asks; at most three relations from one amending rule; only amending rules published by
   8 October 2026, at least twelve days before the run, because the BOE says a consolidated
-  version takes one to three days to produce. No rule in the window amends the data protection
-  laws, so none of the ten is about data protection.
+  version takes one to three days to produce. None of the fifteen candidate rules read amends
+  the data protection laws, so none of the ten is about data protection.
 - **One substitution before the run:** a regional rule (Ley 5/2026 de la Comunidad de Madrid,
   final provision one, which amends Decreto Legislativo 1/2010 of that region) was dropped
-  because the amended rule has no ELI permalink on boe.es (the request returned 404): it was
-  published only in the regional bulletin, so its identifier could not be resolved
-  independently. Row 10 replaced it.
+  because the amended rule has no ELI permalink on boe.es (the request returned 404), so its
+  identifier could not be resolved independently. Row 10 replaced it.
