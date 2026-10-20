@@ -43,6 +43,7 @@ repealed. A missed obligation costs far more than a few minutes spent dismissing
 | Document | What it answers |
 | --- | --- |
 | [Project plan](docs/project-plan.md) | Phases, gates, deliverables and where each one lives |
+| [Requirements](docs/requirements.md) | What the radar must do and how well, each with how it will be checked |
 | [Risk register](docs/risk-register.md) | What could go wrong and what is done about it |
 | [Feasibility spikes](docs/spikes/README.md) | The questions to answer before design, with pass thresholds fixed in advance |
 | [Architecture decisions](docs/adr/README.md) | Each significant decision, with the options that were discarded |
