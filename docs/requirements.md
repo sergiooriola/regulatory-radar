@@ -98,6 +98,33 @@ notice refers to them (FR-27).
   a risk. Facts about external services are cited with their URL and the date read under
   [sources](#sources).
 
+## Profile data model
+
+A school's profile is the input that decides which rules apply. The attributes below are the
+ones the proposal asks a school about; the client's values are kept in its private repository
+and never here ([ADR 0002]).
+
+| Attribute | What it records |
+| --- | --- |
+| Type of centre | Ownership and funding (public, publicly funded private, or private) and education system (the Spanish one, or a named foreign one) |
+| Holder | The legal form of the entity that holds the school's authorisation |
+| Location | Autonomous community, municipality and the education authority's territorial area |
+| Education levels | The levels authorised for the current school year and, for a foreign system, their Spanish equivalents |
+| Children under three | Whether children under three attend, in any programme or service |
+| Pupils | Approximate number, with its date |
+| Staff | Number of workers, with its date |
+| Canteen | None, own kitchen, or a catering company |
+| Transport | None, own routes, contracted routes, or both |
+| Out-of-school activities | Extracurricular activities, holiday camps, and trips with nights away from home |
+| Health facilities | Swimming pool, infirmary, health staff |
+| Video surveillance | Whether there are surveillance cameras |
+| Data protection officer | Whether one has been appointed |
+| Pupils in a foreign-system school | Whether Spanish pupils take Spanish Language and Culture, and whether pupils seek recognition of the foreign qualification |
+| Accreditations | The bodies that accredit the school (their requirements are out of scope) |
+
+The weekly notice's recipients and the cost ceiling are configuration, not profile: they do
+not decide applicability.
+
 ## Open questions
 
 Points the proposal leaves open, for the design phase. Each names who decides. None of them is
