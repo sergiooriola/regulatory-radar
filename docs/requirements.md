@@ -9,7 +9,7 @@ This document states what the radar must do, how well, and how each requirement 
 checked. It is derived from the proposal the client accepted (version 1.0, on 2026-10-20, kept
 in the client's private repository), the [project plan](project-plan.md), the
 [risk register](risk-register.md), the [feasibility spikes](spikes/README.md) and
-[ADR 0002][ADR 0002].
+[ADR 0002].
 
 The proposal is the agreed scope. A requirement the proposal does not support is not here, and
 a point the proposal leaves open is listed under [open questions](#open-questions) instead of
