@@ -186,6 +186,7 @@ def item_from_xml(identifier: str) -> dict:
             analysis.findtext("seccion"),
             meta.findtext("titulo"),
         ),
+        "sub_body": " / ".join(norm(o.text) for o in analysis.findall("organismo")[1:]),
         "rank": meta.findtext("rango"),
         "disposition_date": meta.findtext("fecha_disposicion"),
         "published": meta.findtext("fecha_publicacion"),
@@ -247,6 +248,8 @@ def check_day(bulletin: dict) -> dict:
             mismatches.append((item["identifier"], "section"))
         if department != seen["department"]:
             mismatches.append((item["identifier"], "department"))
+        if item["sub_body"] != seen["sub_body"]:
+            mismatches.append((item["identifier"], "sub-body"))
         if item["pdf"] != seen.get("pdf"):
             mismatches.append((item["identifier"], "pdf"))
         if item["published"].replace("/", "") != date:
