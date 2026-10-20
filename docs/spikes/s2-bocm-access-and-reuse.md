@@ -2,7 +2,8 @@
 
 - **Issue:** [#3](https://github.com/sergiooriola/regulatory-radar/issues/3)
 - **Risk:** R04
-- **Status:** Done. Threshold met: BOCM is in the first version.
+- **Status:** Threshold met on the engineer's checks. The owner's spot check of one summary
+  PDF in a browser is pending; until then the hand-check part is not fully closed.
 - **Run:** 2026-10-20. Every source below was read on that date.
 - **Code:** [`spikes/s2/`](../../spikes/s2/), throwaway
 
@@ -41,12 +42,15 @@ script, not before the first request.
 
 ## Result
 
-**Pass.** All three parts of the threshold are met.
+**Pass on the engineer's checks, pending the owner's spot check.** All three parts of the
+threshold are met, but the hand checks were done by the engineer running the spike (an AI
+agent, with a diff as an aid), not by a person. The owner's comparison of one summary PDF in a
+browser is still to do.
 
 | Part of the threshold | Result |
 | --- | --- |
 | 20 of 20 days retrieved | 20 of 20: bulletins 231 to 250 (2026-09-28 to 2026-10-20), 1,439 items, every request answered 200 at the first attempt, no retries |
-| The three hand checks match item for item | 3 of 3: 65, 23 and 121 items, every number, section, department, sub-body and title the same as the summary a reader sees |
+| The three hand checks match item for item | 3 of 3 on the engineer's checks: 65, 23 and 121 items, every number, section, department, sub-body and title the same as the HTML summary a reader sees. The owner's spot check of one summary PDF is pending |
 | The terms allow automated reuse | Yes, with conditions: follow robots.txt, cite the BOCM and link to the official text, do not alter it, and treat personal data under data protection law |
 
 The official machine-readable sources are an RSS feed and one XML file per item; no API, no
@@ -176,8 +180,8 @@ results are in the history ([first](https://github.com/sergiooriola/regulatory-r
 
 For each of the three days, [`handcheck.py`](../../spikes/s2/handcheck.py) wrote the summary
 page's visible text and the program's extraction in the same layout. A line-by-line diff
-showed no difference on any of the three days. The reader's view was then read item by item:
-every number from 1 to N present once, under the right section, department and sub-body, with
+showed no difference on any of the three days. The engineer (an AI agent) then read the
+reader's view item by item: every number from 1 to N present once, under the right section, department and sub-body, with
 the right title.
 
 | Date | Bulletin | Items | Lines in each view | Differences | Sections covered |
@@ -257,8 +261,10 @@ Writing to them is outward-facing, so it is left to the owner (see the pull requ
 
 ## Decision
 
-**BOCM is in the first version.** R04's fallback (leave BOCM out and say so in every notice)
-does not apply. R04's description is out of date: the BOCM does publish RSS feeds and per-item
+**BOCM is in the first version, subject to the owner's spot check.** On the engineer's
+checks, R04's fallback (leave BOCM out and say so in every notice) does not apply. If the
+owner's comparison of one summary PDF in a browser finds a difference, the hand-check part of
+the threshold is not met and the fallback applies. R04's description is out of date: the BOCM does publish RSS feeds and per-item
 XML (see the pull request for the suggested change to the risk register).
 
 The reading of the reuse terms is the engineer's, from the law cited above, not a lawyer's.
@@ -316,7 +322,8 @@ Whether to ask the BOCM for written confirmation is left to the owner.
   `/boletin/CM_Boletin_BOCM/`, where the summary PDF lives, so a program may not fetch it. A
   person can open it in a browser; that spot check has not been done.
 - **The hand checks were done by the engineer running the spike** (an AI agent), reading the
-  reader's view with a diff as an aid, not by an independent person.
+  reader's view with a diff as an aid, not by an independent person. A person's spot check of
+  one summary PDF in a browser is pending (see Status).
 - **The comparison was corrected after the first run**, for the four causes listed under
   [Retrieval](#retrieval). The days, the threshold and the hand-check days did not change, and
   both results are committed.
