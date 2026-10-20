@@ -133,3 +133,4 @@ signing acceptance. Everything else is available to read but never required.
 | 2026-10-19 | Client answered the profile questions and agreed the 15 USD ceiling, ahead of discovery. Proposal issued as 1.0; written acceptance pending. |
 | 2026-10-20 | Client confirmed its profile and accepted proposal 1.0. Phase 0 closed; discovery and S6 start. Repositories published. |
 | 2026-10-20 | S1 passed: 60 of 60 days, 11,718 of 11,718 items complete, 10 of 10 relations. Measured volume about 195 items per publication day (about 5,100 a month, below the 6,000 the estimate assumed). Risks R17 to R19 added. |
+| 2026-10-20 | S2 passed on the engineer's checks: 20 of 20 BOCM days (1,439 items), 3 of 3 hand checks, reuse allowed with conditions; the owner's spot check of one summary PDF is pending. BOCM's 10 s crawl delay makes a full day take 12 to 21 minutes, which the design must fit. Risks R20 to R22 added. |
