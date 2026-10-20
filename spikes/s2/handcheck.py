@@ -72,15 +72,15 @@ def program_view(items: list[dict]) -> list[str]:
     lines: list[str] = []
     last_section = last_department = None
     for item in items:
-        section, department = summary_heading(item)
+        section, department, sub_body = summary_heading(item)
         if section != last_section:
             lines.append(f"Sección: {section}")
             last_section, last_department = section, None
         if department and department != last_department:
             lines.append(department)
             last_department = department
-        if item["sub_body"]:
-            lines.append(item["sub_body"])
+        if sub_body:
+            lines.append(sub_body)
         lines.append(item["identifier"].rsplit("-", 1)[1])
         lines.extend(clean(part) for part in item["title"].split("\n") if clean(part))
     return lines

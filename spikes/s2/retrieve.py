@@ -41,21 +41,27 @@ def norm(text: str | None) -> str:
     return re.sub(r"\s+", " ", text).strip()
 
 
+LEADER = r"^[\s.—–•-]+"
+
+
 def norm_title(text: str | None) -> str:
-    """Titles start with "–" in some places and "•" in others; ignore both."""
-    return norm(re.sub(r"^[\s–•-]+", "", text or ""))
+    """Lines of a title may start with a separator: "–", "•", "—" in the HTML summary and
+    "." in the XML of bulletins up to 1 October 2026. Ignore it on every line."""
+    return norm(" ".join(re.sub(LEADER, "", line) for line in (text or "").split("\n")))
 
 
-def issuer(xml_department: str | None, section: str | None, title: str | None) -> str:
+def issuer(xml_department: str | None, text: str | None) -> str:
     """The body that issues an item.
 
-    Section I gives it in <departamento>. Section IV gives the court there as "– Tribunal
-    Superior de Justicia:". Section III (town councils) leaves it empty: the council is the
-    title's first sentence ("– Madrid. Organización y funcionamiento. ..."), as in the summary.
+    Sections I and II give it in <departamento>; section IV gives the court there as
+    "– Tribunal Superior de Justicia:". Sections III and V leave it empty. The item's text
+    then starts with the heading the PDF prints: the section, then the issuer in capitals
+    ("AYUNTAMIENTO DE MADRID", "UNIVERSIDAD ALFONSO X EL SABIO").
     """
-    department = norm(re.sub(r"^[\s–•-]+|:\s*$", "", xml_department or ""))
-    if not department and norm(section).startswith("III."):
-        department = norm_title(title).split(".", 1)[0]
+    department = norm(re.sub(LEADER + r"|:\s*$", "", xml_department or ""))
+    if not department:
+        lines = [norm(line) for line in (text or "").split("\n") if norm(line)]
+        department = lines[1] if len(lines) > 1 else ""
     return department
 
 
@@ -183,10 +189,11 @@ def item_from_xml(identifier: str) -> dict:
         "subsection": analysis.findtext("apartado"),
         "department": issuer(
             meta.findtext("departamento") or analysis.findtext("organismo"),
-            analysis.findtext("seccion"),
-            meta.findtext("titulo"),
+            root.findtext("texto"),
         ),
-        "sub_body": " / ".join(norm(o.text) for o in analysis.findall("organismo")[1:]),
+        "sub_body": " / ".join(
+            norm(o.text) for o in analysis.findall("organismo")[1:] if norm(o.text)
+        ),
         "rank": meta.findtext("rango"),
         "disposition_date": meta.findtext("fecha_disposicion"),
         "published": meta.findtext("fecha_publicacion"),
@@ -198,19 +205,20 @@ def item_from_xml(identifier: str) -> dict:
     }
 
 
-def summary_heading(item: dict) -> tuple[str, str]:
-    """What the HTML summary should show above the item: its section line and <h4>.
+def summary_heading(item: dict) -> tuple[str, str, str]:
+    """What the HTML summary should show above the item: section line, <h4> and sub-body.
 
-    Section I: "I. COMUNIDAD DE MADRID | B) Autoridades y Personal" and the department.
-    Section IV: "IV. ADMINISTRACIÓN DE JUSTICIA | Tribunal Superior de Justicia:" and nothing.
-    Section III: "III. ADMINISTRACIÓN LOCAL AYUNTAMIENTOS" and nothing.
+    Only section I shows the department and sub-body as headings:
+    "I. COMUNIDAD DE MADRID | B) Autoridades y Personal", the department, the sub-body.
+    Section IV: "IV. ADMINISTRACIÓN DE JUSTICIA | Tribunal Superior de Justicia:".
+    Sections II, III and V: the section line alone; the issuer is in the title.
     """
     section = norm(item["section"])
     if item["subsection"]:
-        return f"{section} | {norm(item['subsection'])}", item["department"]
-    if section.startswith("III."):
-        return section, ""
-    return f"{section} | {item['department']}:", ""
+        return f"{section} | {norm(item['subsection'])}", item["department"], item["sub_body"]
+    if section.startswith("IV."):
+        return f"{section} | {item['department']}:", "", ""
+    return section, "", ""
 
 
 def check_day(bulletin: dict) -> dict:
@@ -243,12 +251,12 @@ def check_day(bulletin: dict) -> dict:
             continue
         if norm_title(item["title"]) != norm_title(seen.get("title")):
             mismatches.append((item["identifier"], "title"))
-        section, department = summary_heading(item)
+        section, department, sub_body = summary_heading(item)
         if section != norm(seen["section"]):
             mismatches.append((item["identifier"], "section"))
         if department != seen["department"]:
             mismatches.append((item["identifier"], "department"))
-        if item["sub_body"] != seen["sub_body"]:
+        if sub_body != seen["sub_body"]:
             mismatches.append((item["identifier"], "sub-body"))
         if item["pdf"] != seen.get("pdf"):
             mismatches.append((item["identifier"], "pdf"))
@@ -274,7 +282,7 @@ def main() -> None:
     bulletins = bulletins_from_feed()
     rows = [check_day(bulletin) for bulletin in bulletins]
     with open(HERE / "results.csv", "w", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=list(rows[0]))
+        writer = csv.DictWriter(handle, fieldnames=list(rows[0]), lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
     for row in rows:
