@@ -105,3 +105,7 @@ measurements from S3 to S5.
 
 Each spike gets a report in this folder, named `s<n>-<slug>.md`, with the question, the
 threshold as fixed here, what was done, the result, and the decision that follows.
+
+| Spike | Report | Result |
+| --- | --- | --- |
+| S1 | [s1-boe-open-data.md](s1-boe-open-data.md) | Passed on 2026-10-20 |
