@@ -321,6 +321,8 @@ def cmd_probes(args):
         ("text block, XML",
          f"{BASE}/datosabiertos/api/legislacion-consolidada/id/{args.law}/texto/bloque/a1",
          "application/xml"),
+        ("later relation types", f"{BASE}/datosabiertos/api/datos-auxiliares/relaciones-posteriores",
+         "application/json"),
     ]
     for name, url, accept in probes:
         meta, body = fetch(url, accept=accept)
