@@ -125,6 +125,67 @@ and never here ([ADR 0002]).
 The weekly notice's recipients and the cost ceiling are configuration, not profile: they do
 not decide applicability.
 
+## Functional requirements
+
+### Profile
+
+| ID | Requirement | Acceptance criterion | Source and links |
+| --- | --- | --- | --- |
+| FR-1 | The radar must take a school's profile as structured input that follows the profile data model, with no profile value written into the code. | Test: the radar runs end to end on a synthetic profile whose values differ from the client's. The client-identifier check passes on every change. | [ADR 0002] |
+| FR-2 | Each profile value must record its source, the date it was obtained and whether the client confirmed it. | Review: the profile used at the gate is checked attribute by attribute. | Proposal, annex A |
+
+### Applicability map
+
+| ID | Requirement | Acceptance criterion | Source and links |
+| --- | --- | --- | --- |
+| FR-3 | From the profile, the radar must produce a map of the rules that apply to the school. | Spike: [S5] threshold. From the gate on, evals use the client's reviewed map as the reference (NFR-4). | Proposal, scope; [R01], [R12] |
+| FR-4 | Each map row must state the rule, the provision that makes it apply, what the rule requires and the date from which it applies. | Test: every row validates against the map schema. Review: the map at the gate. | Proposal, the problem and the proposal |
+| FR-5 | Each map row must give the reasoning behind it, naming the profile attributes it depends on, and a link to the rule's official publication. | Test: every row validates against the map schema. Review: the map at the gate. | Proposal, the problem and the proposal; README, design goals |
+| FR-6 | Where it is uncertain whether a rule applies to the school, its row must say so and give the reasoning and the provisions it rests on, leaving the decision to the client sponsor. | Review: every uncertain row in the [S5] output and in the map for review has its reasoning and at least one verified provision. | Proposal, the problem and the proposal |
+| FR-7 | The radar must not show the map to the client sponsor until the owner has approved it. | Test: before the owner's approval, the review page shows no map to the client sponsor's account. | Proposal, scope |
+
+### Map review page
+
+| ID | Requirement | Acceptance criterion | Source and links |
+| --- | --- | --- | --- |
+| FR-8 | The radar must provide a private web page on which the client sponsor reviews the map row by row. | Review: demonstrated to the owner before the gate. Access is covered by NFR-15. | Proposal, scope |
+| FR-9 | For each row, the review page must let the client sponsor either confirm it or correct it with a comment. | Test: a confirmation and a correction are each recorded for a test row. | Proposal, how the work runs; [R08] |
+| FR-10 | The review page must record each row's decision with its date. | Test: after a decision, the stored record has the row, the decision, any comment and the date. | Proposal, changes and approval |
+| FR-11 | Each row on the review page must show everything FR-4 and FR-5 require, so that it can be confirmed or corrected without opening another document. | Review: the owner does a dry run of the whole review before the gate. | Proposal, how the work runs; [R08] |
+
+### Daily watch
+
+| ID | Requirement | Acceptance criterion | Source and links |
+| --- | --- | --- | --- |
+| FR-12 | On each BOE publication day, the radar must retrieve every item that day's BOE publishes, in all its sections. | Spike: [S1] threshold. Test: each day, the number of items retrieved equals the number in the day's summary. | Proposal, scope |
+| FR-13 | The radar must classify every retrieved item as *affects*, *may affect* or *does not affect* the profile. | Spike: [S3] and [S4] thresholds. Eval: NFR-1 and NFR-2. | Proposal, the problem and the proposal |
+| FR-14 | Each item classified as *affects* or *may affect* must carry the reasoning and the provision on which its classification rests. | Test: every such item validates against the classification schema. Spike: [S4] threshold. | Proposal, the problem and the proposal; [R01] |
+| FR-15 | The radar must detect every change to, and every repeal of, a rule in the map that the BOE publishes. | Spike: [S1] threshold for relations. Pilot: NFR-5. | Proposal, the problem and the proposal; README |
+| FR-16 | If spike [S2] passes, the radar must apply FR-12 to FR-15 to the BOCM as well. | Review: the [S2] report and the decision it records. Test: as for FR-12, against the BOCM summary. | Proposal, scope; [R04] |
+| FR-17 | If an item or a publication day cannot be retrieved or classified, the radar must report it in the next weekly notice instead of skipping it. | Test: with a simulated failure of the source, the next notice lists the unprocessed day or item. | Proposal, the problem and the proposal; [R01] |
+
+### Citation check
+
+| ID | Requirement | Acceptance criterion | Source and links |
+| --- | --- | --- | --- |
+| FR-18 | Before a cited provision is shown in the map, on the review page or in a notice, the radar must check that the provision exists in the BOE consolidated text or, for a rule not yet consolidated, in its official publication. | Spike: zero invented citations in [S4] and [S5]. Test: a citation of a provision that does not exist is caught. | [R06] |
+| FR-19 | Where the radar quotes a provision, it must check that the quotation matches the text it was checked against. | Test: an altered quotation is caught. | [R06] |
+| FR-20 | A citation that fails FR-18 or FR-19 must not be shown. | Test: the failed citation in the tests of FR-18 and FR-19 does not appear in any output. | [R06]; README, design goals |
+| FR-21 | An item or map row must not be dropped because one of its citations failed the check. | Test: the item in the tests of FR-18 and FR-19 still reaches the owner. How it is shown is an [open question](#open-questions). | [R01] |
+
+### Weekly notice
+
+| ID | Requirement | Acceptance criterion | Source and links |
+| --- | --- | --- | --- |
+| FR-22 | The radar must send a notice by email once a week to the recipients the client designates and to the owner. | Pilot: four notices in four weeks, each received by every recipient. | Proposal, the problem and the proposal |
+| FR-23 | The notice must list every item classified as *affects* or *may affect*, and every change or repeal of a rule in the map, that no earlier notice has listed. | Test: the items classified in the period match the items in the notice, one for one. | Proposal, the problem and the proposal |
+| FR-24 | For each item, the notice must state its classification, what is new or what changes, what the client has to do and by when, the reasoning, the provision it rests on and a link to the official publication. | Test: every notice item validates against the notice schema. Pilot: the owner reviews each notice. | Proposal, the problem and the proposal |
+| FR-25 | When a week has nothing to report, the radar must still send the notice, saying so. | Test: a week with no items produces a notice that says there is nothing new. | Proposal, the problem and the proposal |
+| FR-26 | Every notice must state that it is an aid, not legal advice, and that a person decides. | Test: the statement is present in every notice. | Proposal, the problem and the proposal; [R10] |
+| FR-27 | For an item about the collective agreement or another labour matter, the notice must report its publication and refer its interpretation to the client's labour adviser, without interpreting it. | Review: the [S4] output and the pilot notices for every such item. | Proposal, out of scope; [R10] |
+| FR-28 | Every notice must state that instructions sent directly to schools by the regional education authority, without being published in a bulletin, are not covered. | Test: the statement is present in every notice. | Proposal, out of scope; [R05] |
+| FR-29 | While the BOCM is not watched, every notice must say so. | Test: with the BOCM disabled, the statement is present in every notice. | Proposal, risks; [R04] |
+
 ## Open questions
 
 Points the proposal leaves open, for the design phase. Each names who decides. None of them is
@@ -147,6 +208,15 @@ stated.
 [BOE reuse]: https://www.boe.es/informacion/aviso_legal/index.php#reutilizacion
 [IEEE 29148]: https://standards.ieee.org/ieee/29148/6937/
 [NASA SEH App. C]: https://www.nasa.gov/reference/appendix-c-how-to-write-a-good-requirement/
+[R01]: risk-register.md
 [R04]: risk-register.md
 [R05]: risk-register.md
+[R06]: risk-register.md
+[R08]: risk-register.md
+[R10]: risk-register.md
+[R12]: risk-register.md
+[S1]: spikes/README.md#s1-boe-open-data
 [S2]: spikes/README.md#s2-bocm-access-and-reuse
+[S3]: spikes/README.md#s3-triage-recall
+[S4]: spikes/README.md#s4-deep-analysis
+[S5]: spikes/README.md#s5-map-discovery
