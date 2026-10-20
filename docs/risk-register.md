@@ -1,6 +1,6 @@
 # Risk register
 
-- **Last reviewed:** 2026-10-19
+- **Last reviewed:** 2026-10-20
 - **Scale:** likelihood and impact are each *low*, *medium* or *high*.
 
 Each risk is reviewed at every phase exit. A closed risk keeps its row, with the evidence that
@@ -10,7 +10,7 @@ closed it.
 | --- | --- | --- | --- | --- | --- | --- |
 | R01 | The radar says a rule does not apply when it does, and the client misses an obligation. | Medium | High | Recall-first thresholds in S3–S5; every classification shows its reasoning and article; a person decides; evals against the client's reviewed map. | S3, S4, S5 | Open |
 | R02 | AWS promotional credits do not cover Claude on Bedrock. The AWS Price List API for eu-south-2 describes Claude Haiku 5.5 and Sonnet 5.5 usage as "AWS Marketplace software usage" (checked 2026-10-19), and credits are reported to exclude Marketplace. | High | Low | Check on the first bill in S6; the cost estimate assumes no credits for the model. | S6, S7 | Open |
-| R03 | A new AWS account is not granted access to Anthropic models (community reports say Free-plan accounts are denied). | Medium | High | Open the account on the Paid plan; S6 confirms access before any other spike depends on it. | S6 | Open |
+| R03 | A new AWS account is not granted access to Anthropic models (community reports say Free-plan accounts are denied). | Medium | High | Open the account with the advanced sign-up (the newer one cannot use opt-in Regions or AWS Marketplace) on the Paid plan, following the [setup runbook](runbooks/aws-account-setup.md); S6 confirms access before any other spike depends on it. | S6 | Open |
 | R04 | BOCM cannot be read reliably by a program, or its terms do not allow reuse. No API or RSS feed was found. | High | Medium | S2 decides; if it fails, BOCM is left out of the first version and every notice says so. | S2 | Open |
 | R05 | Instructions the regional education authority sends directly to schools never appear in a bulletin. | High | Medium | Out of scope; stated in the proposal and in every notice. | Proposal | Accepted |
 | R06 | The model cites an article that does not exist or says something it does not say. | Medium | High | Every cited article is checked against the BOE consolidated text before it is shown; S4 and S5 require zero invented citations. | S4, S5 | Open |
