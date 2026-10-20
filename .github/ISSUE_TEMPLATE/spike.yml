@@ -1,0 +1,19 @@
+name: Spike
+description: A time-boxed feasibility experiment defined in docs/spikes/README.md
+labels: ["spike"]
+body:
+  - type: input
+    id: spike
+    attributes:
+      label: Spike
+      description: Identifier and link to its section in docs/spikes/README.md.
+      placeholder: S1, docs/spikes/README.md#s1-boe-open-data
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
+      description: >-
+        Anything needed to run it. The question, method, threshold and time box are fixed in
+        docs/spikes/README.md and are not restated or changed here.

@@ -1,0 +1,9 @@
+{
+  // Rules: https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md
+  "config": {
+    // Prose is wrapped at 100 columns; tables and code are left as they are.
+    "MD013": { "line_length": 100, "tables": false, "code_blocks": false }
+  },
+  // Upstream MADR template, kept verbatim.
+  "ignores": ["docs/adr/adr-template.md"]
+}

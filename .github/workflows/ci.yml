@@ -1,0 +1,68 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  markdown:
+    name: Markdown lint
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: DavidAnson/markdownlint-cli2-action@21c1be1b93ad9ed58fa840aacc3f279cde2a72ff # v24.2.0
+        with:
+          globs: "**/*.md"
+
+  pr-title:
+    name: Pull request title
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check the title follows Conventional Commits
+        env:
+          TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          pattern='^(build|chore|ci|docs|feat|fix|perf|refactor|revert|spike|style|test)(\([a-z0-9-]+\))?!?: [^ ].*[^.]$'
+          if [[ ! "$TITLE" =~ $pattern ]]; then
+            echo "::error::The title must follow Conventional Commits, for example 'docs: add the requirements'."
+            exit 1
+          fi
+
+  client-data:
+    name: No client identifiers
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Search the tree for client identifiers
+        env:
+          # One identifier per line. Kept as a secret so the list is not published.
+          CLIENT_IDENTIFIERS: ${{ secrets.CLIENT_IDENTIFIERS }}
+        run: |
+          if [[ -z "$CLIENT_IDENTIFIERS" ]]; then
+            if [[ "$GITHUB_ACTOR" == "dependabot[bot]" ]]; then
+              echo "::notice::Repository secrets are not available to Dependabot runs; check skipped."
+              exit 0
+            fi
+            echo "::error::The CLIENT_IDENTIFIERS secret is not set."
+            exit 1
+          fi
+          patterns="$(mktemp)"
+          printf '%s\n' "$CLIENT_IDENTIFIERS" | grep -v '^[[:space:]]*$' > "$patterns"
+          # -l prints file names only, so matched text never reaches the public log.
+          if git grep -l -i -F -f "$patterns"; then
+            echo "::error::The files above contain client identifiers. See ADR 0002."
+            exit 1
+          fi
