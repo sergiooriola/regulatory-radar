@@ -308,10 +308,13 @@ Whether to ask the BOCM for written confirmation is left to the owner.
 
 ## Deviations from the method
 
-- **The hand checks used the HTML summary, not the summary PDF.** The method allows either
-  ("the official PDF or the page a person would read"), but the PDF was the first choice.
-  robots.txt disallows `/boletin/CM_Boletin_BOCM/`, where the summary PDF lives, so a program
-  may not fetch it. A person can open it in a browser; that spot check has not been done.
+- **The hand checks used the HTML summary, not the summary PDF.** The
+  [spike plan](README.md#s2-bocm-access-and-reuse) says "compare three of them by hand with
+  the published summary" and does not name a format. The task brief for this spike added that
+  the published summary means "the official PDF or the page a person would read"; the HTML
+  summary on bocm.es is the second. The PDF was the first choice, but robots.txt disallows
+  `/boletin/CM_Boletin_BOCM/`, where the summary PDF lives, so a program may not fetch it. A
+  person can open it in a browser; that spot check has not been done.
 - **The hand checks were done by the engineer running the spike** (an AI agent), reading the
   reader's view with a diff as an aid, not by an independent person.
 - **The comparison was corrected after the first run**, for the four causes listed under
