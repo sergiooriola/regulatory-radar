@@ -54,9 +54,11 @@ def issuer(xml_department: str | None, text: str | None) -> str:
     """The body that issues an item.
 
     Sections I and II give it in <departamento>; section IV gives the court there as
-    "– Tribunal Superior de Justicia:". Sections III and V leave it empty. The item's text
-    then starts with the heading the PDF prints: the section, then the issuer in capitals
-    ("AYUNTAMIENTO DE MADRID", "UNIVERSIDAD ALFONSO X EL SABIO").
+    "– Tribunal Superior de Justicia:". Sections III and V leave it empty; section III
+    usually names the town in the first <organismo> (the caller passes it instead). When
+    both are missing, the item's text starts with the heading the PDF prints: the section,
+    then the issuer in capitals ("AYUNTAMIENTO DE MADRID" in section III, a company or
+    foundation in section V).
     """
     department = norm(re.sub(LEADER + r"|:\s*$", "", xml_department or ""))
     if not department:
