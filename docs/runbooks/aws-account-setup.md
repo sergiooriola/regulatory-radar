@@ -232,41 +232,85 @@ management account, following
 
 | Name | Scope | Why |
 | --- | --- | --- |
-| `regulatory-radar-monthly` | Filter **Linked account** = the radar's account | The radar against its own ceiling |
 | `organization-monthly` | No filter | Any spend anywhere, including the management account, which should be close to zero |
+| `regulatory-radar-monthly` | Filter **Linked account** = the radar's account | The radar against its own ceiling |
+
+Create `organization-monthly` first and `regulatory-radar-monthly` the next day. The values of
+the **Linked account** filter come from Cost Explorer, which AWS enables when Billing and Cost
+Management is first opened and which has the current month's data about 24 hours later
+([enabling Cost Explorer](https://docs.aws.amazon.com/cost-management/latest/userguide/ce-enable.html)).
+Until then the list is empty and shows "Data is not available"; typing the account ID does not
+help. The radar spends nothing before S6, so the day's wait leaves nothing uncovered.
 
 For each one:
 
 1. Billing and Cost Management > **Budgets** > **Create budget** > **Customize (advanced)** >
-   **Cost budget** > **Next**.
+   **Cost budget** > **Next**. The simplified template cannot filter by account. Leave
+   **Billing view** empty, so the budget uses the primary view, which covers the whole
+   organization.
 2. Period **Monthly**, **Recurring budget**, starting this month, budgeting method **Fixed**,
    amount **15** (USD).
 3. Scope as in the table. Leave the cost aggregation at its default, unblended costs. Do not
    choose a "net" option: those subtract credits, and the alert must show what the radar really
    costs, so it stays useful when the credits run out.
-4. Alerts, each as **% of budgeted amount**, sent to your email address:
+4. Alerts, each as **% of budgeted amount**, sent to the first group address:
    - 50 % **Actual**
    - 80 % **Actual**
    - 100 % **Actual**
    - 100 % **Forecasted**
+   Leave the Amazon SNS and chat alerts closed: email is enough.
 5. No actions. **Create budget**.
 6. Confirm the verification email AWS sends to the recipient
    ([email recipients](https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-email-recipients.html)).
+   It comes from AWS User Notifications, its link expires after 12 hours, and it only works
+   while signed in to the management account.
+
+**Cost Anomaly Detection.** Enabling Cost Explorer also sets up Cost Anomaly Detection, free,
+with a monitor for AWS services and a daily email summary when unexpected spend exceeds 100 USD
+and 40 % of what was expected ([enabling Cost Explorer](https://docs.aws.amazon.com/cost-management/latest/userguide/ce-enable.html)).
+Keep it. At this project's scale that threshold never fires, so lower it once the radar has a
+few weeks of normal spend to compare against; before then the budgets are the real guard.
 
 ## 10. Install the AWS CLI and sign in from the terminal
 
-1. Install or update AWS CLI version 2 with the official installer
+1. Install or update AWS CLI version 2
    ([install](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)).
+   On Linux the recommended method is now AWS's install script. It installs for the current
+   user, without `sudo`, into `~/.local/share/aws-cli` with the command in `~/.local/bin`, and
+   verifies the installer's PGP signature itself. It needs `unzip`, which some distributions
+   lack (`sudo apt install unzip` on Ubuntu). To check the script before running it, download
+   `install.sh` and `install.sh.sig` and verify them with `gpg` against the AWS CLI key from the
+   install page, whose fingerprint is `FB5D B77F D5C1 18B8 0511 ADA8 A631 0ACC 4672 475C`.
 2. Configure a profile for IAM Identity Center that points at the radar's account
-   ([configure SSO](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-sso.html)):
+   ([configure SSO](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-sso.html)),
+   either with the interactive `aws configure sso --profile radar` or by writing
+   `~/.aws/config` directly. The result is the same; the file holds no secrets:
 
-   ```sh
-   aws configure sso --profile radar
+   ```ini
+   [profile radar]
+   sso_session = <client>
+   sso_account_id = <radar account ID>
+   sso_role_name = AdministratorAccess
+   region = eu-south-2
+   output = json
+
+   [sso-session <client>]
+   sso_start_url = <access portal URL from step 5>
+   sso_region = eu-south-2
+   sso_registration_scopes = sso:account:access
    ```
 
-   Use the access portal URL from step 5, Region `eu-south-2`, the radar's account, the
-   **AdministratorAccess** role, default Region `eu-south-2` and output format `json`.
-3. Check it:
+3. Sign in, in a terminal of your own, because the command waits for the browser:
+
+   ```sh
+   aws sso login --profile radar
+   ```
+
+   Sign in as your Identity Center user and allow the client named `botocore-client-...`,
+   which is the CLI. Under WSL the CLI often cannot open the browser: open the URL it prints in
+   the Windows browser. If the return to `localhost` fails, use `--use-device-code` and enter
+   the code it shows.
+4. Check it:
 
    ```sh
    aws sts get-caller-identity --profile radar
@@ -287,14 +331,33 @@ endpoint the radar uses, so filling it in keeps both options open.
 
 1. Signed in to the radar's account, in **Europe (Spain)**, open Amazon Bedrock > **Model
    catalog** > an Anthropic model, or the Anthropic providers page, and complete the use-case
-   form: company name and website (the client's), intended users internal, use case "classify
-   official bulletin publications for regulatory applicability; outputs reviewed by a person".
-2. The agreement can stay pending for a while; AWS sends an email when it is ready.
+   form: company name, the client's public website (check which domain actually serves it;
+   it may differ from the email domain), intended users internal, industry, and the use case.
+   The console takes at most 500 characters for the use case: say what the model reads
+   (public official bulletins), what it does (classify and summarise), that no personal data
+   is processed, and the volume. If you open the playground, do not send a prompt.
+2. Read the submission back:
+
+   ```sh
+   aws bedrock get-use-case-for-model-access --profile radar --region eu-south-2 \
+     --query formData --output text | base64 -d | base64 -d
+   ```
+
+   The CLI prints the stored form base64-encoded once more, hence the two decodes.
 3. Do not invoke any model yet. Invoking it accepts the model's licence and starts billing;
-   that happens in S6, with the budgets already in place.
+   that happens in S6, with the budgets already in place. Until then,
+   `aws bedrock get-foundation-model-availability` shows the agreement as `NOT_AVAILABLE`,
+   which is expected: the per-model agreement is created on the first invocation. `PENDING`
+   after that invocation means AWS is still setting it up and emails when it is done.
+
+In Europe (Spain) the Anthropic models list only `INFERENCE_PROFILE` as their inference type:
+they are reached through inference profiles, which route requests across several Regions. S6
+checks that both models are invoked through the EU inference profile (requirement NFR-14).
 
 ## 12. Hand over to S6
 
-Write in the client's private repository, under `records/`, the date, both account IDs, the
-access portal URL and the status of each step above. They are not secret, but they identify
-the client, so they do not go in this repository. Then tell the engineer running S6.
+Write in the client's private repository, as a living internal document rather than an
+append-only record, the date, both account IDs, the access portal URL, who holds each
+credential, the status of each step above and what is still pending. They are not secret, but
+they identify the client, so they do not go in this repository. No passwords, MFA secrets or
+invitation links go there either. Then tell the engineer running S6.
