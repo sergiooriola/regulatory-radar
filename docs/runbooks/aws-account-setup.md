@@ -1,73 +1,122 @@
-# Runbook: set up the client's AWS account
+# Runbook: set up the client's AWS accounts
 
-- **For:** the owner, who opens and administers the account on the client's behalf.
+- **For:** the owner, who opens and administers the accounts on the client's behalf.
 - **Related:** spike S6, risks R02, R03 and R07.
-- **Sources read on:** 2026-10-20. Each step links to the AWS page it comes from; if the
-  console differs from what is written here, the linked page wins and this runbook is corrected.
+- **Sources read on:** 2026-10-20, and again on 2026-10-21 when the structure changed to an
+  organization. Each step links to the AWS page it comes from; if the console differs from what
+  is written here, the linked page wins and this runbook is corrected.
 
-The account belongs to the client and is paid by the client. Nothing here creates a resource
+The accounts belong to the client and are paid by the client. Nothing here creates a resource
 that costs money; the only spend before S6 is zero.
+
+## Account structure
+
+An AWS account is a container for resources with its own bill and its own security boundary. An
+AWS Organizations organization groups several accounts under one **management account**, which
+pays the single combined bill and manages users and policies; the others are **member
+accounts**.
+
+AWS recommends using the management account only for tasks that require it and keeping every
+workload in member accounts: organization policies (SCPs) do not restrict the management
+account, and separate accounts make the bill easier to read
+([management account best practices](https://docs.aws.amazon.com/organizations/latest/userguide/orgs_best-practices_mgmt-acct.html)).
+The client may use AWS for more than the radar, so:
+
+| Account | Name | Holds |
+| --- | --- | --- |
+| Management | `<client>-management` | The bill, IAM Identity Center, the organization, budgets. No workloads. |
+| Member | `<client>-regulatory-radar-prod` | Everything the radar runs |
+| Future members | `<client>-<purpose>-prod` | One account per future workload |
+
+Names follow AWS's *organization-purpose-environment* convention
+([sign-up](https://docs.aws.amazon.com/accounts/latest/reference/getting-started.html)) and can be
+changed later
+([update account name](https://docs.aws.amazon.com/accounts/latest/reference/manage-acct-update-acct-name.html)).
+Member accounts cost nothing in themselves.
 
 ## What you need before starting
 
-- **A group email address on the client's domain** that the client controls and that more than
-  one person can read, used only for this account. AWS recommends a corporate distribution
-  list so the client keeps access when people change jobs, and says the address must not be
-  used for anything else
+- **Two group email addresses on the client's domain**, one per account, each used for nothing
+  else and read by more than one person. AWS recommends an address that forwards to a group so
+  the client keeps access when people change jobs, and says the root user's address should not
+  be used for other purposes
   ([sign-up](https://docs.aws.amazon.com/accounts/latest/reference/getting-started.html),
   [root user best practices](https://docs.aws.amazon.com/IAM/latest/UserGuide/root-user-best-practices.html#ru-bp-group)).
+  Each AWS account needs its own address, because the address is the root user's sign-in name.
+  On Google Workspace, a group in the Admin console works: no mailbox and no licence, and every
+  message is copied to each member
+  ([create a group](https://knowledge.workspace.google.com/admin/groups/create-a-group-in-your-organization)).
+  Two settings are needed for AWS's mail to reach it, because AWS is outside the organization
+  ([fix group settings](https://knowledge.workspace.google.com/admin/support/troubleshooting/fix-common-issues-with-group-settings)):
+  in the Admin console, **Groups for Business > Sharing settings > Group owners can allow
+  incoming email from outside the organization**; in Google Groups, the group's **Who can post**
+  set to **Anyone on the web**. Send a test message from an address outside the domain. In
+  October 2026 the test reached the member's inbox but in Spam, so each member adds a Gmail
+  filter on the group address with **Never send it to Spam**.
 - **A company phone number** that can receive SMS and calls, for identity verification and
   account recovery.
 - **The client's payment card.**
-- **Two MFA devices** for the root user, for example an authenticator app on your phone and a
-  hardware security key. AWS recommends registering more than one
+- **Two MFA devices** for the root user, held if possible by two different people, for example
+  an authenticator app on the owner's phone and another on the client sponsor's phone. AWS
+  recommends registering more than one
   ([MFA](https://docs.aws.amazon.com/IAM/latest/UserGuide/root-user-best-practices.html#ru-bp-mfa)).
-- **A password manager**, for the root password.
-- About an hour, plus waiting time for activation (minutes, up to 24 hours).
+- **A password manager**, with a database that belongs to the client, not the owner's personal
+  one, so it can be handed over. Do not store the MFA secret in the same database as the
+  password: whoever opened it would hold both factors.
+- About two hours, plus waiting time for activation and Region enablement.
 
-## 1. Create the account with "Sign up for AWS (advanced)"
+## 1. Create the management account with "Sign up for AWS (advanced)"
 
-AWS now offers two sign-up paths. Use the **advanced** one. The newer path cannot use opt-in
-Regions such as Europe (Spain), cannot use AWS Marketplace, through which Claude on Amazon
-Bedrock is billed, and cannot choose the Region where content is stored
+AWS is rolling out a second, newer sign-up to a limited number of customers. It cannot use
+opt-in Regions such as Europe (Spain), cannot use AWS Marketplace, through which Claude on
+Amazon Bedrock is billed, and cannot choose the Region where content is stored
 ([compare sign-up options](https://docs.aws.amazon.com/accounts/latest/reference/sign-up-for-aws.html)).
+There is no button that names either sign-up: the advanced one is the one whose first page
+asks for **Root user email address** and **AWS account name**; the newer one asks you to sign in
+with an existing login instead.
 
 1. Open <https://signin.aws.amazon.com/signup?request_type=register>.
-2. Root user email: the group address. Account name, following AWS's
-   *organisation-purpose-environment* convention: `<client>-regulatory-radar-prod`.
-3. Root password: generated by the password manager.
+2. Root user email: the first group address. Account name: `<client>-management`.
+3. Root password: generated by the password manager and saved there before it is pasted.
 4. **Account plan: Paid.** Both plans get the same sign-up credits, but the Free plan blocks
    some AWS Marketplace offers and the account closes when the plan ends
    ([plans](https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/free-tier-plans.html)).
    Community reports say Free-plan accounts are denied Anthropic models (risk R03).
-5. Contact information: the client, company phone.
-6. Billing: the client's card.
-7. Identity check by SMS.
-8. **Support plan: Basic** (free).
-9. Wait for the activation email.
+5. Contact information: the client's legal representative as full name, the client's company
+   name, the company phone and the client's address. Accepting the AWS Customer Agreement
+   accepts it on the client's behalf.
+6. Billing: the client's card. The bank may ask to authorise a small verification charge.
+7. When this runbook was used, in October 2026, the console opened as soon as the card was
+   verified: there was no phone check and no support plan page, and the welcome email ("Your
+   account is ready") arrived minutes later. If the pages do appear, verify by SMS with the
+   company phone and choose the **Basic** support plan, which is free.
 
 ## 2. Secure the root user
 
 The root user can do everything, including closing the account. After this step it is used
 only for the few tasks that require it
-([root user tasks](https://docs.aws.amazon.com/IAM/latest/UserGuide/root-user-tasks.html)).
+([root user tasks](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_root-user.html#root-user-tasks)).
 
-1. Sign in as root.
-2. Register both MFA devices
+1. Account name (top right) > **Security credentials** > **Multi-Factor Authentication (MFA)** >
+   **Assign MFA device**. Register both devices
    ([virtual MFA for root](https://docs.aws.amazon.com/IAM/latest/UserGuide/enable-virt-mfa-for-root.html),
    [FIDO key for root](https://docs.aws.amazon.com/IAM/latest/UserGuide/enable-fido-mfa-for-root.html)).
-3. Do not create access keys for the root user.
-4. Record, in the client's private records and not here, who holds the password, who holds
-   each MFA device, and who can read the root email inbox and the phone. AWS recommends that
-   no single person controls both the email inbox and the phone, because both can recover the
-   root password
+   Name each device after its holder, for example `root-<holder>-phone`.
+2. Do not create access keys for the root user.
+3. Record, in the client's private records and not here, the account ID, who holds the
+   password, who holds each MFA device, and who can read the root email inbox and the phone.
+   AWS recommends that no single person controls both the email inbox and the phone, because
+   both can recover the root password
    ([recovery](https://docs.aws.amazon.com/IAM/latest/UserGuide/root-user-best-practices.html#ru-bp-recovery)).
 
-## 3. Enable the Europe (Spain) Region
+## 3. Enable the Europe (Spain) Region in the management account
 
 `eu-south-2` is an opt-in Region: it is off until it is enabled, enabling it is free, and it can
 take from a few minutes to several hours
 ([Regions](https://docs.aws.amazon.com/accounts/latest/reference/manage-acct-regions.html)).
+IAM Identity Center will live there, and AWS requires the Region to be enabled in every account
+whose access it manages
+([Identity Center in opt-in Regions](https://docs.aws.amazon.com/singlesignon/latest/userguide/regions.html#manually-enabled-regions)).
 
 1. Account name (top right) > **Account**.
 2. Section **AWS Regions** > **Europe (Spain)** > **Enable** > **Enable region**.
@@ -86,7 +135,7 @@ By default only the root user can open the Billing and Cost Management console
 
 AWS recommends identity federation through IAM Identity Center instead of long-lived IAM users:
 you sign in with a username, password and MFA, and every session gets temporary credentials.
-On a standalone account, enabling it creates an AWS Organizations organization with this
+On a standalone account, enabling it creates the AWS Organizations organization, with this
 account as its management account
 ([enable](https://docs.aws.amazon.com/singlesignon/latest/userguide/enable-identity-center.html)).
 IAM Identity Center is offered at no extra charge
@@ -104,25 +153,87 @@ IAM Identity Center is offered at no extra charge
    - User: your own name and your own email address, with **Send an email to this user with
      password setup instructions**.
    - Group: `admins`, with you in it.
-   - Assign the group to this account with a new predefined permission set,
+   - Assign the group to the management account with a new predefined permission set,
      **AdministratorAccess**, keeping the default one-hour session.
 4. Accept the invitation email, set the password and register an MFA device.
 5. Save the **AWS access portal URL** from the email. Sign out of the root user. From now on you
    sign in through the portal.
 
-## 6. Set the budget alerts
+## 6. Create the radar's member account
 
-The ceiling agreed with the client is 15 USD a month. Alerts warn; they do not stop spending
-(risk R07). Steps from
+Signed in through the access portal to the management account
+([create a member account](https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_accounts_create.html)):
+
+1. AWS Organizations console > **AWS accounts** > **Add an AWS account** > **Create an AWS
+   account**.
+2. **AWS account name:** `<client>-regulatory-radar-prod`. **Email address of the account's
+   owner:** the second group address. Leave the IAM role name empty, so it gets the default
+   `OrganizationAccountAccessRole`, which AWS recommends keeping the same in every account.
+3. **Create AWS account**. If the organization is still initialising, wait an hour and retry.
+   The member account copies the management account's phone, company name and address.
+
+## 7. Remove the member account's root credentials
+
+AWS recommends removing root user credentials from member accounts; accounts created in an
+organization after this feature is enabled have none by default, and the management account
+can still perform the few root-only tasks on them or allow a password recovery when needed
+([centralize root access](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_root-enable-root-access.html),
+[root user](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_root-user.html#id_root-user-access-management)).
+
+1. IAM console > **Root access management** > **Enable**. If it says **Root access management
+   is disabled**, first enable trusted access for IAM in AWS Organizations, as the message
+   explains.
+2. Select **Root credentials management** and **Privileged root actions in member accounts**.
+   No delegated administrator. **Enable**.
+3. Check the radar's account has no root credentials. If the account was created before this
+   step and has any, delete them with a privileged task
+   ([perform a privileged task](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_root-user-privileged-task.html)).
+
+The second group address still matters: it receives AWS's notices for that account, and a
+password recovery, if one is ever allowed, goes to it.
+
+## 8. Enable Europe (Spain) in the member account and give yourself access
+
+1. AWS Organizations console > **AWS accounts** > the radar's account > **Account settings** >
+   **Regions** > **Europe (Spain)** > **Actions** > **Enable** > **Enable region**. If the tab
+   asks for it, first enable trusted access for **AWS Account Management** in AWS Organizations
+   ([Regions in an organization](https://docs.aws.amazon.com/accounts/latest/reference/manage-acct-regions.html#manage-acct-regions-enable-organization)).
+   Repeat this for every future member account, or the access portal cannot reach it.
+2. IAM Identity Center > **AWS accounts** > the radar's account > **Assign users or groups** >
+   group `admins` > permission set **AdministratorAccess**.
+3. Sign in through the access portal and check that both accounts appear.
+
+## 9. Credits and budget alerts
+
+**Credits.** The sign-up credits belong to the management account. In an organization they are
+shared with member accounts that have credit sharing activated
+([applying credits](https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/useconsolidatedbilling-credits.html)).
+In the management account: Billing and Cost Management > **Billing preferences** > **Credit
+sharing preferences** > **Edit**, activate the radar's account and select **Default sharing for
+newly created member accounts**. AWS builds the shared pool only from accounts that were in the
+organization on the first day of the month, so usage in the month the organization is created
+may not be covered; S6's first calls cost cents.
+
+**Budgets.** The ceiling agreed with the client is 15 USD a month. Alerts warn; they do not stop
+spending (risk R07). Budgets without actions are free
+([pricing](https://aws.amazon.com/aws-cost-management/aws-budgets/pricing/)). Create two, in the
+management account, following
 [creating a cost budget](https://docs.aws.amazon.com/cost-management/latest/userguide/create-cost-budget.html):
+
+| Name | Scope | Why |
+| --- | --- | --- |
+| `regulatory-radar-monthly` | Filter **Linked account** = the radar's account | The radar against its own ceiling |
+| `organization-monthly` | No filter | Any spend anywhere, including the management account, which should be close to zero |
+
+For each one:
 
 1. Billing and Cost Management > **Budgets** > **Create budget** > **Customize (advanced)** >
    **Cost budget** > **Next**.
-2. Name `monthly-ceiling`. Period **Monthly**, **Recurring budget**, starting this month,
-   budgeting method **Fixed**, amount **15** (USD).
-3. Leave the scope without filters and leave the cost aggregation at its default, unblended
-   costs. Do not choose a "net" option: those subtract credits, and the alert must show what the
-   radar really costs, so it stays useful when the credits run out.
+2. Period **Monthly**, **Recurring budget**, starting this month, budgeting method **Fixed**,
+   amount **15** (USD).
+3. Scope as in the table. Leave the cost aggregation at its default, unblended costs. Do not
+   choose a "net" option: those subtract credits, and the alert must show what the radar really
+   costs, so it stays useful when the credits run out.
 4. Alerts, each as **% of budgeted amount**, sent to your email address:
    - 50 % **Actual**
    - 80 % **Actual**
@@ -132,30 +243,30 @@ The ceiling agreed with the client is 15 USD a month. Alerts warn; they do not s
 6. Confirm the verification email AWS sends to the recipient
    ([email recipients](https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-email-recipients.html)).
 
-## 7. Install the AWS CLI and sign in from the terminal
+## 10. Install the AWS CLI and sign in from the terminal
 
 1. Install or update AWS CLI version 2 with the official installer
    ([install](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)).
-2. Configure a profile for IAM Identity Center
+2. Configure a profile for IAM Identity Center that points at the radar's account
    ([configure SSO](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-sso.html)):
 
    ```sh
    aws configure sso --profile radar
    ```
 
-   Use the access portal URL from step 5, Region `eu-south-2`, the **AdministratorAccess**
-   role, default Region `eu-south-2` and output format `json`.
+   Use the access portal URL from step 5, Region `eu-south-2`, the radar's account, the
+   **AdministratorAccess** role, default Region `eu-south-2` and output format `json`.
 3. Check it:
 
    ```sh
    aws sts get-caller-identity --profile radar
    ```
 
-   The answer shows the account ID and the **AdministratorAccess** role you chose.
+   The answer shows the radar's account ID and the **AdministratorAccess** role you chose.
 
 No access keys are created at any point.
 
-## 8. Prepare model access for Anthropic models
+## 11. Prepare model access for Anthropic models in the radar's account
 
 In commercial Regions there is no longer an access request page. Most models are enabled on
 first use, but Anthropic models first need a one-time use-case form, and in opt-in Regions the
@@ -164,16 +275,16 @@ form must be filled in again even if it was submitted elsewhere
 reached through the `bedrock-mantle` endpoint do not need the form; spike S6 decides which
 endpoint the radar uses, so filling it in keeps both options open.
 
-1. In **Europe (Spain)**, open Amazon Bedrock > **Model catalog** > an Anthropic model, or the
-   Anthropic providers page, and complete the use-case form: company name and website (the
-   client's), intended users internal, use case "classify official bulletin publications for
-   regulatory applicability; outputs reviewed by a person".
+1. Signed in to the radar's account, in **Europe (Spain)**, open Amazon Bedrock > **Model
+   catalog** > an Anthropic model, or the Anthropic providers page, and complete the use-case
+   form: company name and website (the client's), intended users internal, use case "classify
+   official bulletin publications for regulatory applicability; outputs reviewed by a person".
 2. The agreement can stay pending for a while; AWS sends an email when it is ready.
 3. Do not invoke any model yet. Invoking it accepts the model's licence and starts billing;
-   that happens in S6, with the budget already in place.
+   that happens in S6, with the budgets already in place.
 
-## 9. Hand over to S6
+## 12. Hand over to S6
 
-Write in the client's private repository, under `records/`, the date, the account ID, the
+Write in the client's private repository, under `records/`, the date, both account IDs, the
 access portal URL and the status of each step above. They are not secret, but they identify
 the client, so they do not go in this repository. Then tell the engineer running S6.
