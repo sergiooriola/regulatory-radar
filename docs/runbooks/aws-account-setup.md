@@ -52,9 +52,9 @@ Member accounts cost nothing in themselves.
   incoming email from outside the organization**; in Google Groups, the group's **Who can post**
   set to **Anyone on the web**. The Admin console's create-group page already shows an access
   table: tick **External** in the **Who can post** row there, and keep **Who can contact group
-  owners** to owners, managers and members. Send a test message from an address outside the domain. In
-  October 2026 the test reached the member's inbox but in Spam, so each member adds a Gmail
-  filter on the group address with **Never send it to Spam**.
+  owners** to owners, managers and members. Send a test message from an address outside the
+  domain. In October 2026 the test reached the member's inbox but in Spam, so each member adds
+  a Gmail filter on the group address with **Never send it to Spam**.
 - **A company phone number** that can receive SMS and calls, for identity verification and
   account recovery.
 - **The client's payment card.**
