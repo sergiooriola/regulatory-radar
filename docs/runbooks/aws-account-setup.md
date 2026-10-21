@@ -50,9 +50,11 @@ Member accounts cost nothing in themselves.
   ([fix group settings](https://knowledge.workspace.google.com/admin/support/troubleshooting/fix-common-issues-with-group-settings)):
   in the Admin console, **Groups for Business > Sharing settings > Group owners can allow
   incoming email from outside the organization**; in Google Groups, the group's **Who can post**
-  set to **Anyone on the web**. Send a test message from an address outside the domain. In
-  October 2026 the test reached the member's inbox but in Spam, so each member adds a Gmail
-  filter on the group address with **Never send it to Spam**.
+  set to **Anyone on the web**. The Admin console's create-group page already shows an access
+  table: tick **External** in the **Who can post** row there, and keep **Who can contact group
+  owners** to owners, managers and members. Send a test message from an address outside the
+  domain. In October 2026 the test reached the member's inbox but in Spam, so each member adds
+  a Gmail filter on the group address with **Never send it to Spam**.
 - **A company phone number** that can receive SMS and calls, for identity verification and
   account recovery.
 - **The client's payment card.**
@@ -120,7 +122,9 @@ whose access it manages
 
 1. Account name (top right) > **Account**.
 2. Section **AWS Regions** > **Europe (Spain)** > **Enable** > **Enable region**.
-3. Wait until its status is **Enabled** before step 5.
+3. Wait until its status is **Enabled** before step 5. In October 2026 it was already enabled
+   right after sign-up: AWS suggests the opt-in Region of the contact address's country during
+   sign-up.
 
 ## 4. Let IAM identities see billing
 
@@ -150,29 +154,22 @@ IAM Identity Center is offered at no extra charge
    **Single-Region instance**: the multi-Region option creates a KMS key, which costs money.
 3. Follow the official tutorial
    ([administrative user](https://docs.aws.amazon.com/singlesignon/latest/userguide/get-started-assign-account-access-admin-user.html)):
-   - User: your own name and your own email address, with **Send an email to this user with
-     password setup instructions**.
+   - User: one per person who administers the account, with the client email address that
+     person works with and **Send an email to this user with password setup instructions**.
+     The owner chose to name the user after the role (for example `it`) rather than after
+     himself; that is fine while one person uses it, and anyone who joins later gets their own
+     user so CloudTrail keeps showing who did what.
    - Group: `admins`, with you in it.
    - Assign the group to the management account with a new predefined permission set,
      **AdministratorAccess**, keeping the default one-hour session.
-4. Accept the invitation email, set the password and register an MFA device.
+4. Accept the invitation email, set the password and register an MFA device at the first
+   sign-in. The email comes from `no-reply@login.awsapps.com` and its link goes to
+   `<region>.signin.aws`. The link carries a one-time token: whoever opens it first sets the
+   password, so do not forward or paste it anywhere.
 5. Save the **AWS access portal URL** from the email. Sign out of the root user. From now on you
    sign in through the portal.
 
-## 6. Create the radar's member account
-
-Signed in through the access portal to the management account
-([create a member account](https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_accounts_create.html)):
-
-1. AWS Organizations console > **AWS accounts** > **Add an AWS account** > **Create an AWS
-   account**.
-2. **AWS account name:** `<client>-regulatory-radar-prod`. **Email address of the account's
-   owner:** the second group address. Leave the IAM role name empty, so it gets the default
-   `OrganizationAccountAccessRole`, which AWS recommends keeping the same in every account.
-3. **Create AWS account**. If the organization is still initialising, wait an hour and retry.
-   The member account copies the management account's phone, company name and address.
-
-## 7. Remove the member account's root credentials
+## 6. Centralize root access before creating member accounts
 
 AWS recommends removing root user credentials from member accounts; accounts created in an
 organization after this feature is enabled have none by default, and the management account
@@ -185,12 +182,25 @@ can still perform the few root-only tasks on them or allow a password recovery w
    explains.
 2. Select **Root credentials management** and **Privileged root actions in member accounts**.
    No delegated administrator. **Enable**.
-3. Check the radar's account has no root credentials. If the account was created before this
-   step and has any, delete them with a privileged task
+3. After step 7, check that the radar's account has no root credentials. If a member account
+   was created before this step and has any, delete them with a privileged task
    ([perform a privileged task](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_root-user-privileged-task.html)).
 
-The second group address still matters: it receives AWS's notices for that account, and a
-password recovery, if one is ever allowed, goes to it.
+Member accounts still need their own group address: it receives AWS's notices for that
+account, and a password recovery, if one is ever allowed, goes to it.
+
+## 7. Create the radar's member account
+
+Signed in through the access portal to the management account
+([create a member account](https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_accounts_create.html)):
+
+1. AWS Organizations console > **AWS accounts** > **Add an AWS account** > **Create an AWS
+   account**.
+2. **AWS account name:** `<client>-regulatory-radar-prod`. **Email address of the account's
+   owner:** the second group address. Leave the IAM role name empty, so it gets the default
+   `OrganizationAccountAccessRole`, which AWS recommends keeping the same in every account.
+3. **Create AWS account**. If the organization is still initialising, wait an hour and retry.
+   The member account copies the management account's phone, company name and address.
 
 ## 8. Enable Europe (Spain) in the member account and give yourself access
 
