@@ -1,0 +1,5 @@
+event_time,aws_region,model_id,inference_region,in_eu,error_code,request_id
+2026-10-23T08:03:11Z,eu-south-2,eu.anthropic.claude-haiku-4-5-20251001-v1:0,,,ValidationException,c6e16d76-72fd-47b7-ad26-40c857001231
+2026-10-23T08:03:57Z,eu-south-2,eu.anthropic.claude-haiku-4-5-20251001-v1:0,,,ServiceUnavailableException,28f6a512-1259-4ee5-8c55-496e06ed1b64
+2026-10-23T08:04:02Z,eu-south-2,eu.anthropic.claude-haiku-4-5-20251001-v1:0,,,ServiceUnavailableException,5986fa48-836d-42ab-8545-195959c8b228
+2026-10-23T08:04:08Z,eu-south-2,eu.anthropic.claude-haiku-4-5-20251001-v1:0,eu-north-1,yes,,470828c1-d9dc-49c2-8e7e-9b461dd46337

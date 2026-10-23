@@ -1,0 +1,6 @@
+model_id,started_at,seconds,outcome,detail,response_model,stop_reason,input_tokens,output_tokens
+eu.anthropic.claude-haiku-5-5,2026-10-23T08:03:25+00:00,0.66,AccessDeniedException,anthropic.claude-haiku-5-5 is not available for this account. You can explore ,,,,
+eu.anthropic.claude-sonnet-5-5,2026-10-23T08:03:25+00:00,0.48,AccessDeniedException,anthropic.claude-sonnet-5-5 is not available for this account. You can explore,,,,
+eu.anthropic.claude-sonnet-5,2026-10-23T08:03:26+00:00,0.52,AccessDeniedException,anthropic.claude-sonnet-5 is not available for this account. You can explore o,,,,
+eu.anthropic.claude-haiku-4-5-20251001-v1:0,2026-10-23T08:03:26+00:00,0.74,ValidationException,This model does not support the effort parameter.,,,,
+eu.anthropic.claude-haiku-4-5-20251001-v1:0,2026-10-23T08:04:07+00:00,16.43,ok,ok,anthropic.claude-haiku-4-5-20251001-v1:0,end_turn,14,4
