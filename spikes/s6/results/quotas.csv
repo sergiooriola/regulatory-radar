@@ -1,0 +1,19 @@
+quota,code,aws_default,applied,checked_at
+Cross-region model inference tokens per minute for Anthropic Claude Haiku 4.5,L-58BE175A,5000000,5000000,2026-10-23T08:05:38+00:00
+Cross-region model inference tokens per minute for Anthropic Claude Haiku 5.5,L-47520EB7,10000000,0,2026-10-23T08:05:38+00:00
+Cross-region model inference tokens per minute for Anthropic Claude Opus 4.5,L-7007E9C9,2000000,2000000,2026-10-23T08:05:38+00:00
+Cross-region model inference tokens per minute for Anthropic Claude Opus 5,L-99296DCD,30000000,0,2026-10-23T08:05:38+00:00
+Cross-region model inference tokens per minute for Anthropic Claude Opus 5.5,L-A4430697,30000000,0,2026-10-23T08:05:38+00:00
+Cross-region model inference tokens per minute for Anthropic Claude Sonnet 4.5 V1,L-F4DDD3EB,5000000,5000000,2026-10-23T08:05:38+00:00
+Cross-region model inference tokens per minute for Anthropic Claude Sonnet 4.5 V1 1M Context Length,L-8EA73537,1000000,1000000,2026-10-23T08:05:38+00:00
+Cross-region model inference tokens per minute for Anthropic Claude Sonnet 5,L-D4FBCF4E,6000000,0,2026-10-23T08:05:38+00:00
+Cross-region model inference tokens per minute for Anthropic Claude Sonnet 5.5,L-94A31E46,6000000,0,2026-10-23T08:05:38+00:00
+Global cross-region model inference tokens per minute for Anthropic Claude Haiku 4.5,L-9A11C666,5000000,5000000,2026-10-23T08:05:38+00:00
+Global cross-region model inference tokens per minute for Anthropic Claude Haiku 5.5,L-F26CA8D1,10000000,0,2026-10-23T08:05:38+00:00
+Global cross-region model inference tokens per minute for Anthropic Claude Opus 4.5,L-3ABF6ACC,2000000,2000000,2026-10-23T08:05:38+00:00
+Global cross-region model inference tokens per minute for Anthropic Claude Opus 5,L-D73B1244,30000000,0,2026-10-23T08:05:38+00:00
+Global cross-region model inference tokens per minute for Anthropic Claude Opus 5.5,L-A103A344,30000000,0,2026-10-23T08:05:38+00:00
+Global cross-region model inference tokens per minute for Anthropic Claude Sonnet 4.5 V1,L-27C57EE8,5000000,5000000,2026-10-23T08:05:38+00:00
+Global cross-region model inference tokens per minute for Anthropic Claude Sonnet 4.5 V1 1M Context Length,L-4B26E44A,1000000,1000000,2026-10-23T08:05:38+00:00
+Global cross-region model inference tokens per minute for Anthropic Claude Sonnet 5,L-DD84E5CA,6000000,0,2026-10-23T08:05:38+00:00
+Global cross-region model inference tokens per minute for Anthropic Claude Sonnet 5.5,L-31AB82D0,6000000,0,2026-10-23T08:05:38+00:00

@@ -110,3 +110,4 @@ threshold as fixed here, what was done, the result, and the decision that follow
 | --- | --- | --- |
 | S1 | [s1-boe-open-data.md](s1-boe-open-data.md) | Passed on 2026-10-20 |
 | S2 | [s2-bocm-access-and-reuse.md](s2-bocm-access-and-reuse.md) | Passed on 2026-10-20 on the engineer's checks; the owner's spot check of one summary PDF is pending |
+| S6 | [s6-aws-account-and-model-access.md](s6-aws-account-and-model-access.md) | In progress: the EU profile keeps processing in the EU, but the account's quota for Claude Haiku 5.5 and Sonnet 5.5 is 0; support case opened on 2026-10-23 |
