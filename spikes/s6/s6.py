@@ -71,7 +71,7 @@ def write_csv(name, rows):
     RESULTS.mkdir(exist_ok=True)
     path = RESULTS / name
     with path.open("w", newline="", encoding="utf-8") as f:
-        writer = csv.DictWriter(f, fieldnames=list(rows[0]))
+        writer = csv.DictWriter(f, fieldnames=list(rows[0]), lineterminator="\n")
         writer.writeheader()
         for row in rows:
             writer.writerow({k: redact(str(v)) for k, v in row.items()})
@@ -83,7 +83,7 @@ def append_csv(name, rows):
     path = RESULTS / name
     new = not path.exists()
     with path.open("a", newline="", encoding="utf-8") as f:
-        writer = csv.DictWriter(f, fieldnames=list(rows[0]))
+        writer = csv.DictWriter(f, fieldnames=list(rows[0]), lineterminator="\n")
         if new:
             writer.writeheader()
         for row in rows:
