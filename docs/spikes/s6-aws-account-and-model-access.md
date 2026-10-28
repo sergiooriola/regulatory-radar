@@ -29,7 +29,7 @@ Quoted from [the spike plan](README.md#s6-aws-account-and-model-access), approve
 | Model access requested | Anthropic use-case form submitted on 2026-10-21 in eu-south-2 | Done |
 | The EU profile keeps processing in the EU | Both profiles route only to six Regions in EU member states; the one call that ran was processed in eu-north-1 | Pass |
 | Claude Haiku 5.5 and Sonnet 5.5 invoked through the EU profile | `AccessDeniedException`: the account's tokens-per-minute quota for both is 0 | Blocked |
-| How the usage appears on the bill, and whether credits apply | Waiting for the bill (one call to Claude Haiku 4.5, about 0.00004 USD) | Pending |
+| How the usage appears on the bill, and whether credits apply | Claude is billed as AWS Marketplace usage sold by Anthropic, PBC. The only credit excluded Marketplace and ended when the organization was created | No credits apply |
 | Time box of 1 day | The work itself took less than half a day; the quota waits on AWS | Exceeded if AWS takes longer |
 
 **Decision so far:** none. The threshold names Claude Haiku 5.5 and Sonnet 5.5, and neither can
@@ -39,7 +39,7 @@ fallback is a decision for the owner, not for this spike: see
 
 ## Sources
 
-All were read on 2026-10-23.
+All were read on 2026-10-23, except the last two, read on 2026-10-27.
 
 | Source | URL |
 | --- | --- |
@@ -52,6 +52,8 @@ All were read on 2026-10-23.
 | Quotas for the `bedrock-runtime` endpoint | <https://docs.aws.amazon.com/bedrock/latest/userguide/quotas-runtime.html> |
 | AWS Support case management | <https://docs.aws.amazon.com/awssupport/latest/user/case-management.html> |
 | Claude in Amazon Bedrock (Anthropic) | <https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock> |
+| AWS Promotional Credit Terms and Conditions | <https://aws.amazon.com/awscredits/> |
+| AWS Free Tier Terms | <https://aws.amazon.com/free/terms/> |
 
 ## What was done
 
@@ -148,6 +150,31 @@ subscription was being set up; the probe took 16 seconds in all. The first, inva
 enough to start the subscription: AWS emailed that the Anthropic offer for Claude Haiku 4.5 had
 been accepted at 08:03 UTC. The denied calls to the 5.x models did not appear in event history.
 
+### How Claude is billed, and the credits
+
+The October bill, read in the console on 2026-10-27, does not list the Claude Haiku 4.5 call under
+Amazon Bedrock. It lists it in a separate section, "Amazon Web Services, Inc. - Marketplace", as
+"Claude Haiku 4.5 (Amazon Bedrock Edition)" sold by Anthropic, PBC, with the usage types
+`EUS2-MP:EUS2_InputTokenCount-Units` and `EUS2-MP:EUS2_OutputTokenCount-Units`. The amount rounds
+to 0.00 USD. The bill places the usage in Europe (Spain), the source Region, although CloudTrail
+shows the call ran in eu-north-1.
+
+The account received one credit, the 100 USD AWS Free Tier sign-up credit:
+
+- **It would not have paid for Claude.** Its list of applicable products includes Amazon Bedrock
+  but not AWS Marketplace, and the AWS Promotional Credit Terms exclude AWS Marketplace unless AWS
+  authorises otherwise.
+- **It no longer exists.** The console shows it expired on the day it was issued, 2026-10-21, with
+  nothing used. Asked through a support case, AWS Support answered on 2026-10-28: "Upon creating
+  an AWS Organization, Free Tier eligibility is automatically terminated. This applies to all Free
+  Tier credits and benefits associated with your account." The organization was created that day,
+  when IAM Identity Center was enabled (step 5 of the
+  [setup runbook](../runbooks/aws-account-setup.md)). The published Free Tier Terms state this
+  only for accounts on the Free plan, and this account was opened on the Paid plan.
+
+No credits apply to the radar. The cost estimate already counted Claude at list price, so nothing
+changes, and risk R02 is closed.
+
 ## What the design must know
 
 - **Endpoint.** Only `bedrock-runtime` keeps processing in the EU, through `eu.` inference
@@ -159,6 +186,8 @@ been accepted at 08:03 UTC. The denied calls to the 5.x models did not appear in
   for free, which is enough to check NFR-14 in operation.
 - **First call per model.** It starts an AWS Marketplace subscription, takes several seconds and
   may fail with `ServiceUnavailableException` while it is set up. Retries with backoff cover it.
+- **Credits.** None apply. Claude is billed as AWS Marketplace usage, and the sign-up credit ended
+  when the organization was created. Every estimate counts Claude at list price.
 - **Quotas.** The radar's account starts with a quota of 0 on the 5.x models. Any later account
   (a test or a second client) will need the same support case before it can run.
 
