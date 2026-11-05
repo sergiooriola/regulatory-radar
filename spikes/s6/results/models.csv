@@ -1,0 +1,15 @@
+model_id,name,lifecycle,inference_types,eu_profile,checked_at
+anthropic.claude-fable-5,Claude Fable 5,ACTIVE,INFERENCE_PROFILE,,2026-11-05T16:48:21+00:00
+anthropic.claude-fable-5-1,Claude Fable 5.1,ACTIVE,INFERENCE_PROFILE,,2026-11-05T16:48:21+00:00
+anthropic.claude-haiku-4-5-20251001-v1:0,Claude Haiku 4.5,ACTIVE,INFERENCE_PROFILE,eu.anthropic.claude-haiku-4-5-20251001-v1:0,2026-11-05T16:48:21+00:00
+anthropic.claude-haiku-5-5,Claude Haiku 5.5,ACTIVE,INFERENCE_PROFILE,eu.anthropic.claude-haiku-5-5,2026-11-05T16:48:21+00:00
+anthropic.claude-opus-4-5-20251101-v1:0,Claude Opus 4.5,ACTIVE,INFERENCE_PROFILE,eu.anthropic.claude-opus-4-5-20251101-v1:0,2026-11-05T16:48:21+00:00
+anthropic.claude-opus-4-6-v1,Claude Opus 4.6,ACTIVE,INFERENCE_PROFILE,eu.anthropic.claude-opus-4-6-v1,2026-11-05T16:48:21+00:00
+anthropic.claude-opus-4-7,Claude Opus 4.7,ACTIVE,INFERENCE_PROFILE,eu.anthropic.claude-opus-4-7,2026-11-05T16:48:21+00:00
+anthropic.claude-opus-4-8,Claude Opus 4.8,ACTIVE,INFERENCE_PROFILE,eu.anthropic.claude-opus-4-8,2026-11-05T16:48:21+00:00
+anthropic.claude-opus-5,Claude Opus 5,ACTIVE,INFERENCE_PROFILE,eu.anthropic.claude-opus-5,2026-11-05T16:48:21+00:00
+anthropic.claude-opus-5-5,Claude Opus 5.5,ACTIVE,INFERENCE_PROFILE,eu.anthropic.claude-opus-5-5,2026-11-05T16:48:21+00:00
+anthropic.claude-sonnet-4-5-20250929-v1:0,Claude Sonnet 4.5,LEGACY,INFERENCE_PROFILE,eu.anthropic.claude-sonnet-4-5-20250929-v1:0,2026-11-05T16:48:21+00:00
+anthropic.claude-sonnet-4-6,Claude Sonnet 4.6,ACTIVE,INFERENCE_PROFILE,eu.anthropic.claude-sonnet-4-6,2026-11-05T16:48:21+00:00
+anthropic.claude-sonnet-5,Claude Sonnet 5,ACTIVE,INFERENCE_PROFILE,eu.anthropic.claude-sonnet-5,2026-11-05T16:48:21+00:00
+anthropic.claude-sonnet-5-5,Claude Sonnet 5.5,ACTIVE,INFERENCE_PROFILE,eu.anthropic.claude-sonnet-5-5,2026-11-05T16:48:21+00:00
