@@ -111,19 +111,22 @@ measurements from S3 to S5.
   usage, and may open as the account builds history. It gave no date.
 - **Decision:** the owner chose on 2026-11-05 to go on with Claude Haiku 4.5, which works on
   the account through its EU profile, rather than wait.
-- **Large model:** not Claude Sonnet 4.5. Amazon Bedrock moved it to Legacy on 2026-10-08, with
-  end of life on 2027-04-08, and new customers cannot use Legacy models
+- **Large model:** Claude Sonnet 4.6. It is Active in eu-south-2, has an EU profile and its
+  default quota of 6 million tokens per minute on the account, and costs three times as much
+  per token as Haiku 4.5. The other candidates do worse: Claude Sonnet 4.5 is Legacy since
+  2026-10-08, with end of life on 2027-04-08, and new customers cannot use Legacy models
   ([model lifecycle](https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html));
-  the account has never used it. The AWS Price List for eu-south-2 has no other Sonnet apart
-  from Sonnet 5 and 5.5, whose quotas are 0. The large model is therefore the newest Claude
-  Opus 4.x that is Active in eu-south-2 and has a quota above 0 on the account; the S6 check
-  below names it.
+  Opus 4.7 and 4.8 have a quota of 0; Opus 4.5 and 4.6 cost five times as much as Haiku 4.5.
+- **Corrected the same day, before the check spent anything:** the first version of this entry
+  said the price list had no Sonnet besides 5 and 5.5 and chose an Opus 4.x. The price list does
+  list Sonnet 4.6, under a usage type the first reading missed ("Regional CRIS"), and the
+  account's free checks (`s6.py models` and `quotas`) show it Active with its quota.
 - **S6:** the threshold is not met for Claude Haiku 5.5 and Sonnet 5.5. Before S3 runs, the
   same method checks the replacement pair, with this threshold: both models Active in
   eu-south-2, both invoked through the EU profile, and every call processed in a Region of an
   EU member state according to CloudTrail.
-- **S3 to S5:** Claude Haiku 4.5 is the small model and the Opus model the large one. The
-  thresholds do not change. In S4 the large model costs five times as much per token as the
+- **S3 to S5:** Claude Haiku 4.5 is the small model and Claude Sonnet 4.6 the large one. The
+  thresholds do not change. In S4 the large model costs three times as much per token as the
   small one, not twenty.
 - **S7:** the ceiling does not change: 15 USD a month. The 2 to 8 USD estimate used 5.5 prices,
   and Claude Haiku 4.5 costs ten times as much per token as Haiku 5.5, so passing the ceiling
@@ -138,15 +141,18 @@ measurements from S3 to S5.
   before the design fixes the model.
 
 On-demand prices through the EU profile in eu-south-2, from the AWS Price List
-(`AmazonBedrockFoundationModels`, "Regional" usage types), read on 2026-11-05:
+(`AmazonBedrockFoundationModels`, the "Regional" usage types), and each model's lifecycle state
+and applied cross-Region quota on the account, read on 2026-11-05:
 
-| Model | Input, USD per million tokens | Output, USD per million tokens | Bedrock lifecycle page, 2026-11-05 |
-| --- | --- | --- | --- |
-| Claude Haiku 5.5 | 0.11 | 0.55 | Not listed as Legacy; quota 0 on the account |
-| Claude Haiku 4.5 | 1.10 | 5.50 | Not listed as Legacy |
-| Claude Sonnet 5.5 | 2.20 | 11.00 | Not listed as Legacy; quota 0 on the account |
-| Claude Sonnet 4.5 | 3.30 | 16.50 | Legacy since 2026-10-08 |
-| Claude Opus 4.5 to 4.8 | 5.50 | 27.50 | Not listed as Legacy |
+| Model | Input, USD per million tokens | Output, USD per million tokens | Lifecycle | Quota, tokens per minute |
+| --- | --- | --- | --- | --- |
+| Claude Haiku 5.5 | 0.11 | 0.55 | Active | 0 |
+| Claude Haiku 4.5 | 1.10 | 5.50 | Active | 5,000,000 |
+| Claude Sonnet 5.5 | 2.20 | 11.00 | Active | 0 |
+| Claude Sonnet 4.6 | 3.30 | 16.50 | Active | 6,000,000 |
+| Claude Sonnet 4.5 | 3.30 | 16.50 | Legacy | 5,000,000 |
+| Claude Opus 4.5 and 4.6 | 5.50 | 27.50 | Active | 2,000,000 and 3,000,000 |
+| Claude Opus 4.7 and 4.8 | 5.50 | 27.50 | Active | 0 |
 
 ## Reports
 
