@@ -3,3 +3,13 @@ event_time,aws_region,model_id,inference_region,in_eu,error_code,request_id
 2026-10-23T08:03:57Z,eu-south-2,eu.anthropic.claude-haiku-4-5-20251001-v1:0,,,ServiceUnavailableException,28f6a512-1259-4ee5-8c55-496e06ed1b64
 2026-10-23T08:04:02Z,eu-south-2,eu.anthropic.claude-haiku-4-5-20251001-v1:0,,,ServiceUnavailableException,5986fa48-836d-42ab-8545-195959c8b228
 2026-10-23T08:04:08Z,eu-south-2,eu.anthropic.claude-haiku-4-5-20251001-v1:0,eu-north-1,yes,,470828c1-d9dc-49c2-8e7e-9b461dd46337
+2026-11-05T16:50:18Z,eu-south-2,eu.anthropic.claude-haiku-4-5-20251001-v1:0,eu-north-1,yes,,099f8836-a5c6-45de-9a16-0580dcfa4ef1
+2026-11-05T16:50:19Z,eu-south-2,eu.anthropic.claude-haiku-4-5-20251001-v1:0,eu-north-1,yes,,1973b2b9-10a9-453f-9812-9e7c5aee57ae
+2026-11-05T16:50:20Z,eu-south-2,eu.anthropic.claude-haiku-4-5-20251001-v1:0,eu-north-1,yes,,a4d8c555-2eaa-45da-91a6-9bc0d11ce33f
+2026-11-05T16:50:21Z,eu-south-2,eu.anthropic.claude-haiku-4-5-20251001-v1:0,eu-north-1,yes,,9fcd23e2-ca1e-42f4-a594-7b478c376b68
+2026-11-05T16:50:22Z,eu-south-2,eu.anthropic.claude-haiku-4-5-20251001-v1:0,eu-north-1,yes,,e9dd06f3-3409-4a6a-bb60-65eefe526126
+2026-11-05T16:50:23Z,eu-south-2,eu.anthropic.claude-sonnet-4-6,eu-north-1,yes,,4794eecc-eebd-46b3-9e0e-6dc8eea89551
+2026-11-05T16:50:24Z,eu-south-2,eu.anthropic.claude-sonnet-4-6,eu-north-1,yes,,e2a186d3-cadd-424c-a76a-bf99aba30808
+2026-11-05T16:50:25Z,eu-south-2,eu.anthropic.claude-sonnet-4-6,eu-north-1,yes,,fcc8a25f-bf4a-44bf-a7dd-ef835db287b2
+2026-11-05T16:50:26Z,eu-south-2,eu.anthropic.claude-sonnet-4-6,eu-north-1,yes,,5544fa07-ef55-4488-817d-9107c6682405
+2026-11-05T16:50:27Z,eu-south-2,eu.anthropic.claude-sonnet-4-6,eu-north-1,yes,,27d5a0e9-04cf-43d1-91c8-418d7998819d

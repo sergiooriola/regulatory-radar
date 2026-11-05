@@ -5,9 +5,11 @@ Standard library only. Every AWS call goes through the AWS CLI v2 with the
 Raw CLI output is kept under cache/ (git-ignored); what goes to results/ has
 every 12-digit AWS account ID replaced, because this repository is public.
 
+    python3.14 -I s6.py models            # free: Anthropic models in the Region, lifecycle
     python3.14 -I s6.py profiles          # free: which Regions each EU profile uses
     python3.14 -I s6.py quotas            # free: applied tokens-per-minute quotas
     python3.14 -I s6.py invoke --calls 5  # paid: a few cents at most
+    python3.14 -I s6.py --pair 4.x invoke --calls 5  # the replacement pair (plan change)
     python3.14 -I s6.py probe eu.anthropic.claude-sonnet-5  # one call, to tell gates apart
     python3.14 -I s6.py trail             # free: where CloudTrail says each call ran
 """
@@ -27,7 +29,16 @@ CACHE = HERE / "cache"
 RESULTS = HERE / "results"
 PROFILE = "radar"
 REGION = "eu-south-2"
-MODELS = {"haiku": "anthropic.claude-haiku-5-5", "sonnet": "anthropic.claude-sonnet-5-5"}
+# The pair the spike plan names, and the replacement pair from the plan change of
+# 2026-11-05 (AWS refused the 5.5 quota). Haiku 4.5 rejects `effort`, so the 4.x pair
+# runs without it.
+PAIRS = {
+    "5.5": {"haiku": "anthropic.claude-haiku-5-5", "sonnet": "anthropic.claude-sonnet-5-5"},
+    "4.x": {
+        "haiku": "anthropic.claude-haiku-4-5-20251001-v1:0",
+        "sonnet": "anthropic.claude-sonnet-4-6",
+    },
+}
 GEO_PREFIX = "eu."
 MAX_CALLS = 10  # per model; a guard against a typo in --calls
 
@@ -95,13 +106,39 @@ def region_of(arn):
     return arn.split(":")[3]
 
 
+def suffixed(name, pair):
+    """profiles.csv for the 5.5 pair, as in the first run; profiles-4.x.csv for the other."""
+    return name if pair == "5.5" else name.replace(".csv", f"-{pair}.csv")
+
+
 # --- commands ----------------------------------------------------------------
 
 
-def cmd_profiles(_args):
+def cmd_models(_args):
+    """Anthropic models offered in the Region, their lifecycle state and their EU profile."""
+    models = aws("bedrock", "list-foundation-models", "--by-provider", "anthropic")
+    profiles = aws("bedrock", "list-inference-profiles", "--type-equals", "SYSTEM_DEFINED")
+    geo = {p["inferenceProfileId"] for p in profiles.get("inferenceProfileSummaries", [])}
+    rows = [
+        {
+            "model_id": m["modelId"],
+            "name": m.get("modelName"),
+            "lifecycle": m.get("modelLifecycle", {}).get("status"),
+            "inference_types": " ".join(m.get("inferenceTypesSupported", [])),
+            "eu_profile": GEO_PREFIX + m["modelId"] if GEO_PREFIX + m["modelId"] in geo else "",
+            "checked_at": now(),
+        }
+        for m in sorted(models.get("modelSummaries", []), key=lambda m: m["modelId"])
+    ]
+    write_csv("models.csv", rows)
+    for row in rows:
+        print(f"{row['model_id']}: {row['lifecycle']} | EU profile: {row['eu_profile'] or 'none'}")
+
+
+def cmd_profiles(args):
     """Where each model's EU inference profile can route to, and the model's access state."""
     rows = []
-    for name, model in MODELS.items():
+    for name, model in PAIRS[args.pair].items():
         profile_id = GEO_PREFIX + model
         profile = aws(
             "bedrock", "get-inference-profile", "--inference-profile-identifier", profile_id
@@ -109,10 +146,13 @@ def cmd_profiles(_args):
         regions = sorted({region_of(m["modelArn"]) for m in profile.get("models", [])})
         outside = [r for r in regions if r not in EU_MEMBER_STATE_REGIONS]
         availability = aws("bedrock", "get-foundation-model-availability", "--model-id", model)
+        details = aws("bedrock", "get-foundation-model", "--model-identifier", model)
+        lifecycle = details.get("modelDetails", {}).get("modelLifecycle", {})
         rows.append(
             {
                 "model": name,
                 "profile_id": profile_id,
+                "lifecycle": lifecycle.get("status"),
                 "profile_status": profile.get("status"),
                 "profile_type": profile.get("type"),
                 "destination_regions": " ".join(regions),
@@ -123,10 +163,10 @@ def cmd_profiles(_args):
                 "checked_at": now(),
             }
         )
-    write_csv("profiles.csv", rows)
+    write_csv(suffixed("profiles.csv", args.pair), rows)
     for row in rows:
         print(
-            f"{row['model']}: {row['destination_regions']}"
+            f"{row['model']}: {row['lifecycle']} | {row['destination_regions']}"
             f" | outside EU: {row['regions_outside_eu']} | agreement {row['agreement']}"
         )
 
@@ -153,7 +193,7 @@ def cmd_quotas(_args):
             "checked_at": now(),
         }
         for code, q in sorted(default.items(), key=lambda item: item[1]["QuotaName"])
-        if re.search(r"Claude (Haiku|Sonnet|Opus) (5|4\.5)", q["QuotaName"])
+        if re.search(r"Claude (Haiku|Sonnet|Opus) [45]", q["QuotaName"])
     ]
     write_csv("quotas.csv", rows)
     for row in rows:
@@ -216,14 +256,14 @@ def cmd_invoke(args):
     if not 1 <= args.calls <= MAX_CALLS:
         sys.exit(f"--calls must be between 1 and {MAX_CALLS}")
     rows = []
-    for name, model in MODELS.items():
+    for name, model in PAIRS[args.pair].items():
         for i in range(1, args.calls + 1):
-            row = invoke_once(GEO_PREFIX + model, f"{name}-{i}")
+            row = invoke_once(GEO_PREFIX + model, f"{name}-{i}", effort=args.pair == "5.5")
             rows.append({"model": name, "call": i} | row)
             print(f"{name} #{i}: {row['outcome']} {row['stop_reason']} {row['detail']}")
             if row["outcome"] != "ok":
                 break  # the same error would repeat; one is enough to record it
-    write_csv("invocations.csv", rows)
+    write_csv(suffixed("invocations.csv", args.pair), rows)
 
 
 def cmd_probe(args):
@@ -310,10 +350,14 @@ def main():
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
+    parser.add_argument(
+        "--pair", choices=PAIRS, default="5.5", help="model pair for profiles and invoke"
+    )
     sub = parser.add_subparsers(dest="command", required=True)
+    sub.add_parser("models", help="Anthropic models in the Region and their lifecycle (free)")
     sub.add_parser("profiles", help="EU profile Regions and model access state (free)")
     sub.add_parser("quotas", help="Claude tokens-per-minute quotas, applied vs AWS default (free)")
-    invoke = sub.add_parser("invoke", help="invoke both models through the EU profile (paid)")
+    invoke = sub.add_parser("invoke", help="invoke the pair through the EU profile (paid)")
     invoke.add_argument("--calls", type=int, default=5, help=f"calls per model, 1 to {MAX_CALLS}")
     probe = sub.add_parser("probe", help="one call per given model or profile ID (paid if allowed)")
     probe.add_argument("model_ids", nargs="+", help="for example eu.anthropic.claude-sonnet-5")
@@ -324,6 +368,7 @@ def main():
     )
     args = parser.parse_args()
     {
+        "models": cmd_models,
         "profiles": cmd_profiles,
         "quotas": cmd_quotas,
         "invoke": cmd_invoke,

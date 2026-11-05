@@ -163,4 +163,4 @@ threshold as fixed here, what was done, the result, and the decision that follow
 | --- | --- | --- |
 | S1 | [s1-boe-open-data.md](s1-boe-open-data.md) | Passed on 2026-10-20 |
 | S2 | [s2-bocm-access-and-reuse.md](s2-bocm-access-and-reuse.md) | Passed on 2026-10-20 on the engineer's checks; the owner's spot check of one summary PDF is pending |
-| S6 | [s6-aws-account-and-model-access.md](s6-aws-account-and-model-access.md) | In progress: the EU profile keeps processing in the EU, but AWS refused on 2026-11-05 to raise the account's quota of 0 for Claude Haiku 5.5 and Sonnet 5.5; the check of the replacement models is next |
+| S6 | [s6-aws-account-and-model-access.md](s6-aws-account-and-model-access.md) | Not met on 2026-11-05: AWS refused to raise the account's quota of 0 for Claude Haiku 5.5 and Sonnet 5.5. The replacement pair, Claude Haiku 4.5 and Sonnet 4.6, passed its threshold; no AWS credits apply |

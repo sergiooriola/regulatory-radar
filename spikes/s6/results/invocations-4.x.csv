@@ -1,0 +1,11 @@
+model,call,model_id,started_at,seconds,outcome,detail,response_model,stop_reason,input_tokens,output_tokens
+haiku,1,eu.anthropic.claude-haiku-4-5-20251001-v1:0,2026-11-05T16:50:26+00:00,0.88,ok,ok,anthropic.claude-haiku-4-5-20251001-v1:0,end_turn,14,4
+haiku,2,eu.anthropic.claude-haiku-4-5-20251001-v1:0,2026-11-05T16:50:27+00:00,0.82,ok,ok,anthropic.claude-haiku-4-5-20251001-v1:0,end_turn,14,4
+haiku,3,eu.anthropic.claude-haiku-4-5-20251001-v1:0,2026-11-05T16:50:28+00:00,0.96,ok,ok,anthropic.claude-haiku-4-5-20251001-v1:0,end_turn,14,4
+haiku,4,eu.anthropic.claude-haiku-4-5-20251001-v1:0,2026-11-05T16:50:29+00:00,0.95,ok,ok,anthropic.claude-haiku-4-5-20251001-v1:0,end_turn,14,4
+haiku,5,eu.anthropic.claude-haiku-4-5-20251001-v1:0,2026-11-05T16:50:30+00:00,0.91,ok,ok,anthropic.claude-haiku-4-5-20251001-v1:0,end_turn,14,4
+sonnet,1,eu.anthropic.claude-sonnet-4-6,2026-11-05T16:50:31+00:00,1.12,ok,ok,claude-sonnet-4-6,end_turn,14,4
+sonnet,2,eu.anthropic.claude-sonnet-4-6,2026-11-05T16:50:32+00:00,1.14,ok,ok,claude-sonnet-4-6,end_turn,14,4
+sonnet,3,eu.anthropic.claude-sonnet-4-6,2026-11-05T16:50:33+00:00,1.02,ok,ok,claude-sonnet-4-6,end_turn,14,4
+sonnet,4,eu.anthropic.claude-sonnet-4-6,2026-11-05T16:50:34+00:00,1.07,ok,ok,claude-sonnet-4-6,end_turn,14,4
+sonnet,5,eu.anthropic.claude-sonnet-4-6,2026-11-05T16:50:35+00:00,0.98,ok,ok,claude-sonnet-4-6,end_turn,14,4

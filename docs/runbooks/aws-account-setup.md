@@ -360,6 +360,20 @@ In Europe (Spain) the Anthropic models list only `INFERENCE_PROFILE` as their in
 they are reached through inference profiles, which route requests across several Regions. S6
 checks that both models are invoked through the EU inference profile (requirement NFR-14).
 
+Expect a quota of 0. When this runbook was used, the new account had a cross-Region
+tokens-per-minute quota of 0 on every Claude 5.x model and on Opus 4.7 and 4.8, against AWS
+defaults of millions; the 4.x models from Haiku 4.5 to Opus 4.6 had their defaults. Service
+Quotas does not accept a request below the default, and a Service limit increase case was
+refused after 13 days: AWS said access may open as the account builds payment and usage history
+([S6 report](../spikes/s6-aws-account-and-model-access.md)). Read the quotas before promising a
+model to a client:
+
+```sh
+aws service-quotas list-service-quotas --service-code bedrock --profile radar \
+  --region eu-south-2 --output table --query \
+  "Quotas[?starts_with(QuotaName, 'Cross-region model inference tokens per minute for Anthropic')].[QuotaName,Value]"
+```
+
 ## 12. Hand over to S6
 
 Write in the client's private repository, as a living internal document rather than an
