@@ -30,12 +30,13 @@ RESULTS = HERE / "results"
 PROFILE = "radar"
 REGION = "eu-south-2"
 # The pair the spike plan names, and the replacement pair from the plan change of
-# 2026-11-05 (AWS refused the 5.5 quota). The 4.x models do not accept `effort`.
+# 2026-11-05 (AWS refused the 5.5 quota). Haiku 4.5 rejects `effort`, so the 4.x pair
+# runs without it.
 PAIRS = {
     "5.5": {"haiku": "anthropic.claude-haiku-5-5", "sonnet": "anthropic.claude-sonnet-5-5"},
     "4.x": {
         "haiku": "anthropic.claude-haiku-4-5-20251001-v1:0",
-        "opus": "OPUS_MODEL_ID",
+        "sonnet": "anthropic.claude-sonnet-4-6",
     },
 }
 GEO_PREFIX = "eu."

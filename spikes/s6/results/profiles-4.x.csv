@@ -1,0 +1,3 @@
+model,profile_id,lifecycle,profile_status,profile_type,destination_regions,regions_outside_eu,agreement,authorization,entitlement,checked_at
+haiku,eu.anthropic.claude-haiku-4-5-20251001-v1:0,ACTIVE,ACTIVE,SYSTEM_DEFINED,eu-central-1 eu-north-1 eu-south-1 eu-south-2 eu-west-1 eu-west-3,none,AVAILABLE,AUTHORIZED,AVAILABLE,2026-11-05T16:50:18+00:00
+sonnet,eu.anthropic.claude-sonnet-4-6,ACTIVE,ACTIVE,SYSTEM_DEFINED,eu-central-1 eu-north-1 eu-south-1 eu-south-2 eu-west-1 eu-west-3,none,NOT_AVAILABLE,AUTHORIZED,AVAILABLE,2026-11-05T16:50:19+00:00
