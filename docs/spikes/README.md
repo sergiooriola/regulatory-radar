@@ -8,7 +8,7 @@ stay in the private repository.
 - **Status of this plan:** approved on 2026-10-19. The owner delegated the approval of the
   thresholds to the engineer writing this plan; any later change to a threshold is recorded
   here with its date and reason, before the spike it affects runs.
-- **Last updated:** 2026-10-19
+- **Last updated:** 2026-11-05, see [Changes to the plan](#changes-to-the-plan)
 
 ## Order
 
@@ -66,6 +66,7 @@ measurements from S3 to S5.
 - **Threshold:** zero invented citations; no item labelled *affects* classified as *does not
   affect*; agreement with the owner's label on at least 90 % of items.
 - **Time box:** 3 days.
+- **Changed on 2026-11-05:** the models, see [Changes to the plan](#changes-to-the-plan).
 
 ### S5. Map discovery
 
@@ -101,6 +102,52 @@ measurements from S3 to S5.
   BOE volume of 13 to 17 October 2026.
 - **Time box:** 1 day.
 
+## Changes to the plan
+
+### 2026-11-05: Claude Haiku 4.5 instead of Haiku 5.5
+
+- **Why:** AWS refused to raise the radar account's tokens-per-minute quota for Claude Haiku 5.5
+  and Sonnet 5.5 from 0 (S6). Its answer: access depends on the Region, payment history and
+  usage, and may open as the account builds history. It gave no date.
+- **Decision:** the owner chose on 2026-11-05 to go on with Claude Haiku 4.5, which works on
+  the account through its EU profile, rather than wait.
+- **Large model:** not Claude Sonnet 4.5. Amazon Bedrock moved it to Legacy on 2026-10-08, with
+  end of life on 2027-04-08, and new customers cannot use Legacy models
+  ([model lifecycle](https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html));
+  the account has never used it. The AWS Price List for eu-south-2 has no other Sonnet apart
+  from Sonnet 5 and 5.5, whose quotas are 0. The large model is therefore the newest Claude
+  Opus 4.x that is Active in eu-south-2 and has a quota above 0 on the account; the S6 check
+  below names it.
+- **S6:** the threshold is not met for Claude Haiku 5.5 and Sonnet 5.5. Before S3 runs, the
+  same method checks the replacement pair, with this threshold: both models Active in
+  eu-south-2, both invoked through the EU profile, and every call processed in a Region of an
+  EU member state according to CloudTrail.
+- **S3 to S5:** Claude Haiku 4.5 is the small model and the Opus model the large one. The
+  thresholds do not change. In S4 the large model costs five times as much per token as the
+  small one, not twenty.
+- **S7:** the ceiling does not change: 15 USD a month. The 2 to 8 USD estimate used 5.5 prices,
+  and Claude Haiku 4.5 costs ten times as much per token as Haiku 5.5, so passing the ceiling
+  is now likely (risk R07). S7 prices the measured tokens at 4.5 prices and at 5.5 prices, and
+  lists the levers the design can weigh: the price list has batch inference at half price and
+  cached input at a tenth.
+- **Spending on the client's account:** at 4.5 prices, S3 to S5 no longer cost cents. Each
+  spike states its expected model spend before it runs, and one expected to spend more than
+  1 USD waits for the owner's approval.
+- **Watch:** once a month, read the 5.x quotas and the lifecycle state of the models in use
+  (both free; risk R23). If the 5.5 quotas open, S4 runs again on Haiku 5.5 and Sonnet 5.5
+  before the design fixes the model.
+
+On-demand prices through the EU profile in eu-south-2, from the AWS Price List
+(`AmazonBedrockFoundationModels`, "Regional" usage types), read on 2026-11-05:
+
+| Model | Input, USD per million tokens | Output, USD per million tokens | Bedrock lifecycle page, 2026-11-05 |
+| --- | --- | --- | --- |
+| Claude Haiku 5.5 | 0.11 | 0.55 | Not listed as Legacy; quota 0 on the account |
+| Claude Haiku 4.5 | 1.10 | 5.50 | Not listed as Legacy |
+| Claude Sonnet 5.5 | 2.20 | 11.00 | Not listed as Legacy; quota 0 on the account |
+| Claude Sonnet 4.5 | 3.30 | 16.50 | Legacy since 2026-10-08 |
+| Claude Opus 4.5 to 4.8 | 5.50 | 27.50 | Not listed as Legacy |
+
 ## Reports
 
 Each spike gets a report in this folder, named `s<n>-<slug>.md`, with the question, the
@@ -110,4 +157,4 @@ threshold as fixed here, what was done, the result, and the decision that follow
 | --- | --- | --- |
 | S1 | [s1-boe-open-data.md](s1-boe-open-data.md) | Passed on 2026-10-20 |
 | S2 | [s2-bocm-access-and-reuse.md](s2-bocm-access-and-reuse.md) | Passed on 2026-10-20 on the engineer's checks; the owner's spot check of one summary PDF is pending |
-| S6 | [s6-aws-account-and-model-access.md](s6-aws-account-and-model-access.md) | In progress: the EU profile keeps processing in the EU, but the account's quota for Claude Haiku 5.5 and Sonnet 5.5 is 0; support case opened on 2026-10-23 |
+| S6 | [s6-aws-account-and-model-access.md](s6-aws-account-and-model-access.md) | In progress: the EU profile keeps processing in the EU, but AWS refused on 2026-11-05 to raise the account's quota of 0 for Claude Haiku 5.5 and Sonnet 5.5; the check of the replacement models is next |
