@@ -58,7 +58,7 @@ summary in phase 3 describes the pieces without the jargon.
 | Technology | What it does in the radar | Runs in | Cost to the client | Decided in |
 | --- | --- | --- | --- | --- |
 | Python | Language for everything except the review page | — | None (free software) | Phase 3 |
-| Claude on Amazon Bedrock: Haiku 4.5, and Haiku 5.5 and Sonnet 5.5 if AWS opens them to the account | Classify and analyse publications; draft the notice | Client's AWS account, EU processing | The model line of the estimate | S4, then an ADR |
+| Claude on Amazon Bedrock: Haiku 4.5 and Sonnet 4.6 for now; Haiku 5.5 and Sonnet 5.5 if AWS opens them to the account | Classify and analyse publications; draft the notice | Client's AWS account, EU processing | The model line of the estimate | S4, then an ADR |
 | LangChain (`langchain-aws`) | Standard interface to the model, document loading and splitting, vector-store integration | Inside the daily job | None (free software) | ADR |
 | LangGraph | The daily flow as explicit steps, with a pause for human approval | Inside the daily job | None (free software); its saved state needs a database | ADR |
 | Embeddings and a vector store | Retrieval: find the rules in the map related to each new publication | Client's AWS account | A few cents a month, inside the AWS line | ADR |
@@ -138,4 +138,4 @@ signing acceptance. Everything else is available to read but never required.
 | 2026-10-20 | Discovery report 1.0 sent to the client. Phase 1 closed. Phase 2 continues with S6, which waits for the client's AWS account. |
 | 2026-10-23 | S6: the client's AWS accounts are set up and the EU profiles keep processing in the EU, but the account's quota for the Claude 5.x models is 0. Support case opened. |
 | 2026-10-28 | S6: no AWS credits apply. Claude is billed as AWS Marketplace usage, and the sign-up credit ended when the organization was created. R02 closed. |
-| 2026-11-05 | AWS refused to raise the 5.x quota until the account builds history. Owner decided to go on with Claude Haiku 4.5; the spike plan records the change (Sonnet 4.5 excluded as Legacy; the large model is an Opus 4.x). R03 updated, R07 raised to high likelihood, R23 added. |
+| 2026-11-05 | AWS refused to raise the 5.x quota until the account builds history. Owner decided to go on with Claude Haiku 4.5; the spike plan records the change (Sonnet 4.5 excluded as Legacy; the large model is Sonnet 4.6). R03 updated, R07 raised to high likelihood, R23 added. |
