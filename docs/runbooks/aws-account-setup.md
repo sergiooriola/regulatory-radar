@@ -3,8 +3,9 @@
 - **For:** the owner, who opens and administers the accounts on the client's behalf.
 - **Related:** spike S6, risks R02, R03 and R07.
 - **Sources read on:** 2026-10-20, and again on 2026-10-21 when the structure changed to an
-  organization. Each step links to the AWS page it comes from; if the console differs from what
-  is written here, the linked page wins and this runbook is corrected.
+  organization; the Google Groups visibility setting on 2026-11-17. Each step links to the page
+  it comes from; if the console differs from what is written here, the linked page wins and
+  this runbook is corrected.
 
 The accounts belong to the client and are paid by the client. Nothing here creates a resource
 that costs money; the only spend before S6 is zero.
@@ -52,9 +53,15 @@ Member accounts cost nothing in themselves.
   incoming email from outside the organization**; in Google Groups, the group's **Who can post**
   set to **Anyone on the web**. The Admin console's create-group page already shows an access
   table: tick **External** in the **Who can post** row there, and keep **Who can contact group
-  owners** to owners, managers and members. Send a test message from an address outside the
-  domain. In October 2026 the test reached the member's inbox but in Spam, so each member adds
-  a Gmail filter on the group address with **Never send it to Spam**.
+  owners** to owners, managers and members. In the **Who can view conversations** row, untick
+  **Entire Organization**, which the form had ticked in November 2026: otherwise, if the group
+  keeps its conversation history, anyone in the organization can read its mail in Google Groups,
+  including AWS's root password-recovery messages. On an existing group, the setting is in
+  Google Groups, under the group's **Group settings**
+  ([set who can view, post & moderate](https://support.google.com/groups/answer/2464975)).
+  Send a test message from an address outside the domain. In October 2026 the test reached the
+  member's inbox but in Spam, so each member adds a Gmail filter on the group address with
+  **Never send it to Spam**.
 - **A company phone number** that can receive SMS and calls, for identity verification and
   account recovery.
 - **The client's payment card.**
